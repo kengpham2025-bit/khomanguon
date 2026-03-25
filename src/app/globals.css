@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --hero-teal: #0a3d42;
+  --hero-teal-2: #0d4a52;
+}
+
+@layer base {
+  body {
+    @apply bg-white text-slate-900;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-heading;
+  }
+}
+
+/* Gợi ý dùng class theo vùng:
+   font-heading — tiêu đề lớn (đã gắn sẵn cho h1–h3)
+   font-body    — đoạn văn (mặc định body)
+   font-ui      — menu, nút, input, nhãn nhỏ */
+
+.wave-bg {
+  background: linear-gradient(180deg, #ffffff 0%, #f0f9ff 100%);
+}
+
+.wave-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 38vh;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.wave-bottom svg {
+  position: absolute;
+  bottom: 0;
+  width: 120%;
+  left: -10%;
+}
+
+.pill-input {
+  @apply font-ui w-full rounded-full border border-slate-200 px-5 py-3.5 text-sm outline-none transition focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20;
+}
+
+.pill-btn-primary {
+  @apply font-ui flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-emerald-400 to-teal-400 px-6 py-3.5 text-sm font-semibold text-white shadow-md transition hover:brightness-105;
+}

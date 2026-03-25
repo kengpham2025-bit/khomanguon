@@ -1,0 +1,8 @@
+name = "khomanguonnew"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "khomanguonnew"
+database_id = "a68e1aec-8fff-4a5f-a1cd-9a54d9623dd2"

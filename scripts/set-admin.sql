@@ -1,0 +1,2 @@
+-- Gán quyền admin cho email (sau khi user đã đăng ký & xác nhận email):
+-- wrangler d1 execute khomanguonnew --remote --command "UPDATE users SET role = 'admin' WHERE email = 'you@example.com';"

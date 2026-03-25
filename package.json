@@ -1,0 +1,40 @@
+{
+  "name": "khomanguon",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "pages:build": "next build && npx @opennextjs/cloudflare build",
+    "pages:preview": "wrangler pages dev .open-next/cloudflare",
+    "pages:deploy": "wrangler pages deploy .open-next/cloudflare",
+    "d1:migrate": "wrangler d1 execute khomanguonnew --remote --file=./schema.sql",
+    "d1:migrate:local": "wrangler d1 execute khomanguonnew --local --file=./schema.sql"
+  },
+  "dependencies": {
+    "@marsidev/react-turnstile": "^1.1.0",
+    "jose": "^5.9.6",
+    "lucide-react": "^0.468.0",
+    "next": "^15.5.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@cloudflare/next-on-pages": "^1.13.12",
+    "@cloudflare/workers-types": "^4.20241230.0",
+    "@eslint/eslintrc": "^3",
+    "@opennextjs/cloudflare": "^1.17.3",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "^15.5.2",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5",
+    "wrangler": "^4.77.0"
+  }
+}

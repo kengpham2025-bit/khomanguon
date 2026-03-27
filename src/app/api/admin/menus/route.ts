@@ -2,7 +2,19 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getDb } from "@/lib/db";
 import { newId } from "@/lib/ids";
+import { EXCLUDED_MENU_HREFS } from "@/lib/nav-config";
 import { getSessionFromCookies } from "@/lib/session";
+
+function normalizeMenuHref(h: string): string {
+  const t = h.trim();
+  if (!t.startsWith("/")) return t;
+  const noTrail = t.replace(/\/+$/, "");
+  return noTrail === "" ? "/" : noTrail;
+}
+
+function menuHrefForbidden(href: string): boolean {
+  return EXCLUDED_MENU_HREFS.has(normalizeMenuHref(href));
+}
 
 export const runtime = "edge";
 
@@ -42,6 +54,12 @@ export async function POST(req: Request) {
   if (!admin) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   const parsed = createSchema.safeParse(await req.json());
   if (!parsed.success) return NextResponse.json({ error: "Invalid body" }, { status: 400 });
+  if (menuHrefForbidden(parsed.data.href)) {
+    return NextResponse.json(
+      { error: "Không thêm /cua-hang vào menu — danh sách sản phẩm do admin/người bán quản lý, không dùng mục menu cửa hàng." },
+      { status: 400 },
+    );
+  }
 
   const db = getDb();
   const id = newId();
@@ -81,6 +99,12 @@ export async function PATCH(req: Request) {
 
   const label = rest.label ?? (cur as { label: string }).label;
   const href = rest.href ?? (cur as { href: string }).href;
+  if (menuHrefForbidden(href)) {
+    return NextResponse.json(
+      { error: "Không đặt menu trỏ tới /cua-hang — trang này không nằm trong menu điều hướng." },
+      { status: 400 },
+    );
+  }
   const parentId =
     rest.parentId !== undefined ? rest.parentId : (cur as { parent_id: string | null }).parent_id;
   const sortOrder =

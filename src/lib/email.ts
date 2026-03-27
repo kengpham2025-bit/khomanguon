@@ -1,12 +1,18 @@
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://khomanguon.io.vn";
+import { getSetting } from "@/lib/settings";
+
+const APP_URL_FALLBACK = "https://khomanguon.io.vn";
+
+export async function getAppUrl(): Promise<string> {
+  return (await getSetting("app_url")) || APP_URL_FALLBACK;
+}
 
 export async function sendTransactionalEmail(opts: {
   to: string;
   subject: string;
   html: string;
 }): Promise<void> {
-  const key = process.env.RESEND_API_KEY;
-  const from = process.env.EMAIL_FROM || "Kho Mã Nguồn <noreply@khomanguon.io.vn>";
+  const key = await getSetting("resend_api_key");
+  const from = (await getSetting("email_from")) || "Kho Mã Nguồn <noreply@khomanguon.io.vn>";
 
   if (!key) {
     console.info("[email:dev]", opts.to, opts.subject, opts.html.slice(0, 200));
@@ -33,8 +39,8 @@ export async function sendTransactionalEmail(opts: {
   }
 }
 
-export function verificationEmailHtml(token: string): string {
-  const link = `${APP_URL}/xac-thuc-email?token=${encodeURIComponent(token)}`;
+export function verificationEmailHtml(token: string, appUrl: string): string {
+  const link = `${appUrl}/xac-thuc-email?token=${encodeURIComponent(token)}`;
   return `
     <p>Xin chào,</p>
     <p>Vui lòng xác nhận email để kích hoạt tài khoản Kho Mã Nguồn:</p>
@@ -51,7 +57,7 @@ export function otpWithdrawHtml(code: string): string {
   `;
 }
 
-export function forgotPasswordHtml(code: string): string {
+export function forgotPasswordHtml(code: string, appUrl: string): string {
   return `
     <p>Xin chào,</p>
     <p>Chúng tôi nhận được yêu cầu đặt lại mật khẩu cho tài khoản Kho Mã Nguồn.</p>

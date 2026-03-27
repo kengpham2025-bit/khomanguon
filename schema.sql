@@ -1,6 +1,10 @@
 -- Kho Mã Nguồn — D1 schema (chạy: npm run d1:migrate hoặc d1:migrate:local)
 PRAGMA foreign_keys = ON;
 
+-- =====================
+-- BẢNG CƠ BẢN
+-- =====================
+
 CREATE TABLE IF NOT EXISTS users (
   id TEXT PRIMARY KEY,
   email TEXT NOT NULL UNIQUE,
@@ -16,6 +20,39 @@ CREATE TABLE IF NOT EXISTS users (
   created_at INTEGER NOT NULL,
   updated_at INTEGER NOT NULL
 );
+
+-- =====================
+-- BẢNG SỐ DƯ & NẠP TIỀN
+-- =====================
+
+-- Số dư tài khoản của người bán
+CREATE TABLE IF NOT EXISTS user_balances (
+  user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+  balance_cents INTEGER NOT NULL DEFAULT 0,
+  updated_at INTEGER NOT NULL
+);
+
+-- Lịch sử nạp tiền qua PayOS
+CREATE TABLE IF NOT EXISTS deposits (
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  order_code INTEGER NOT NULL UNIQUE,
+  amount_cents INTEGER NOT NULL,
+  status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending','success','failed','cancelled')),
+  payos_transaction_no TEXT,
+  payos_reference TEXT,
+  description TEXT,
+  checkout_url TEXT,
+  created_at INTEGER NOT NULL,
+  completed_at INTEGER
+);
+
+CREATE INDEX IF NOT EXISTS idx_deposits_user ON deposits(user_id);
+CREATE INDEX IF NOT EXISTS idx_deposits_order_code ON deposits(order_code);
+
+-- =====================
+-- BẢNG HỖ TRỢ
+-- =====================
 
 CREATE TABLE IF NOT EXISTS tokens (
   id TEXT PRIMARY KEY,
@@ -55,6 +92,43 @@ CREATE TABLE IF NOT EXISTS products (
 CREATE INDEX IF NOT EXISTS idx_products_seller ON products(seller_id);
 CREATE INDEX IF NOT EXISTS idx_products_status ON products(status);
 
+-- =====================
+-- TIN TỨC (chỉ /tin-tuc, không hiển thị trên trang chủ)
+-- =====================
+
+CREATE TABLE IF NOT EXISTS news_posts (
+  id TEXT PRIMARY KEY,
+  slug TEXT NOT NULL UNIQUE,
+  title TEXT NOT NULL,
+  excerpt TEXT,
+  content_html TEXT NOT NULL,
+  source_url TEXT,
+  seo_keywords TEXT,
+  status TEXT NOT NULL DEFAULT 'draft' CHECK (status IN ('draft','published')),
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL,
+  published_at INTEGER
+);
+
+CREATE INDEX IF NOT EXISTS idx_news_status ON news_posts(status);
+CREATE INDEX IF NOT EXISTS idx_news_published ON news_posts(published_at);
+
+-- =====================
+-- OAUTH (Google / Facebook)
+-- =====================
+
+CREATE TABLE IF NOT EXISTS oauth_states (
+  id TEXT PRIMARY KEY,
+  state TEXT NOT NULL UNIQUE,
+  redirect_to TEXT NOT NULL,
+  provider TEXT NOT NULL CHECK (provider IN ('google','facebook')),
+  expires_at INTEGER NOT NULL,
+  created_at INTEGER NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_oauth_state ON oauth_states(state);
+CREATE INDEX IF NOT EXISTS idx_oauth_expires ON oauth_states(expires_at);
+
 CREATE TABLE IF NOT EXISTS seller_applications (
   id TEXT PRIMARY KEY,
   user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -83,3 +157,21 @@ CREATE TABLE IF NOT EXISTS withdrawals (
   created_at INTEGER NOT NULL,
   completed_at INTEGER
 );
+
+-- =====================
+-- CẤU HÌNH HỆ THỐNG (admin quản lý qua /admin/settings)
+-- =====================
+CREATE TABLE IF NOT EXISTS settings (
+  id TEXT PRIMARY KEY,
+  "group" TEXT NOT NULL DEFAULT 'general',
+  key TEXT NOT NULL UNIQUE,
+  value TEXT NOT NULL DEFAULT '',
+  type TEXT NOT NULL DEFAULT 'string' CHECK (type IN ('string','number','boolean','json')),
+  label TEXT NOT NULL DEFAULT '',
+  description TEXT NOT NULL DEFAULT '',
+  is_secret INTEGER NOT NULL DEFAULT 0,
+  updated_at INTEGER NOT NULL
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_settings_key ON settings(key);
+CREATE INDEX IF NOT EXISTS idx_settings_group ON settings("group");

@@ -1,6 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none" role="img" aria-label="Kho M? Ngu?n">
-  <title>Kho M? Ngu?n</title>
-  <rect x="3" y="3" width="42" height="42" rx="12" fill="#22c55e"/>
-  <!-- Ch? K vector, không ph? thu?c font h? th?ng -->
-  <path fill="white" d="M14 12h5.2v9.2l6.3-9.2h6.1l-7.8 10.4L32.2 36h-6.1l-6.4-9.6-2.5 3.4V36H14V12z"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 44 44" fill="none" role="img" aria-label="Kho Mã Ngu?n">
+  <title>Kho Mã Ngu?n</title>
+  <rect width="44" height="44" rx="22" fill="#0d3d45"/>
+  <rect x="1.5" y="1.5" width="41" height="41" rx="20.5" fill="none" stroke="rgba(16,185,129,0.3)" stroke-width="1.5"/>
+  <g stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <polyline points="14,16 8,22 14,28"/>
+    <line x1="22" y1="15" x2="22" y2="29"/>
+    <polyline points="30,16 36,22 30,28"/>
+  </g>
 </svg>

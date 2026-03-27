@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { headers } from "next/headers";
+import { IconArrowLeft, IconAlertTriangle, IconBadgeCheck, IconShieldCheck, IconStore, IconTag } from "@/components/Icons";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { AlertTriangle, BadgeCheck } from "lucide-react";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -15,9 +15,7 @@ async function getProduct(slug: string) {
   const base = `${proto}://${host}`;
   const res = await fetch(`${base}/api/products`, { cache: "no-store" });
   if (!res.ok) return null;
-  const d = (await res.json()) as {
-    products?: Record<string, unknown>[];
-  };
+  const d = (await res.json()) as { products?: Record<string, unknown>[] };
   const p = d.products?.find((x) => x.slug === slug);
   return p ?? null;
 }
@@ -47,24 +45,28 @@ export default async function ProductDetailPage({ params }: Props) {
   return (
     <>
       <SiteHeader />
-      <main className="mx-auto max-w-3xl px-4 py-12">
-        <Link href="/cua-hang" className="text-sm text-brand-blue">
-          ← Quay lại cửa hàng
+      <main className="page-lg">
+        <Link href="/cua-hang" className="back-link">
+          <IconArrowLeft size={16} /> Quay lại cửa hàng
         </Link>
         {kycWarning ? (
-          <div className="mt-6 flex items-center gap-2 rounded-xl bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
-            <AlertTriangle className="h-5 w-5" />
-            Cảnh báo: người bán chưa xác minh CCCD — cân nhắc kỹ trước khi giao dịch.
+          <div className="alert alert-error" style={{ marginTop: "var(--space-6)" }}>
+            <IconAlertTriangle size={20} />
+            <span style={{ fontWeight: 600 }}>Cảnh báo: người bán chưa xác minh CCCD — cân nhắc kỹ trước khi giao dịch.</span>
           </div>
         ) : (
-          <div className="mt-6 flex items-center gap-2 text-sm font-medium text-emerald-700">
-            <BadgeCheck className="h-5 w-5" />
+          <div className="badge badge-success" style={{ marginTop: "var(--space-6)" }}>
+            <IconBadgeCheck size={18} />
             Người bán đã KYC (tích xanh nội bộ)
           </div>
         )}
-        <h1 className="mt-6 text-3xl font-bold">{String(p.title)}</h1>
-        <p className="mt-4 text-2xl font-bold text-brand-green">{formatVnd(Number(p.price_cents))}</p>
-        <p className="mt-6 whitespace-pre-wrap text-slate-700">{String(p.description || "")}</p>
+        <h1 style={{ marginTop: "var(--space-6)", fontSize: "1.875rem", fontWeight: 700 }}>{String(p.title)}</h1>
+        <p style={{ marginTop: "var(--space-4)", fontSize: "1.5rem", fontWeight: 700, color: "var(--brand-green)" }}>
+          {formatVnd(Number(p.price_cents))}
+        </p>
+        <p className="whitespace-pre-wrap" style={{ marginTop: "var(--space-6)", color: "var(--text-secondary)", lineHeight: 1.7 }}>
+          {String(p.description || "")}
+        </p>
       </main>
       <SiteFooter />
     </>

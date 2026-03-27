@@ -1,26 +1,60 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Manrope, Plus_Jakarta_Sans } from "next/font/google";
+import { AppProviders } from "@/components/providers/AppProviders";
+import { AuthModalProvider } from "@/components/AuthModal";
+import localFont from "next/font/local";
 import "./globals.css";
 
-/** Tiêu đề section, hero — hình học, hiện đại */
-const fontHeading = Plus_Jakarta_Sans({
-  subsets: ["latin", "vietnamese"],
+const fontHeading = localFont({
+  src: [
+    { path: "../../public/media/1a634e73dfeff02c-s.woff2", weight: "400" },
+    { path: "../../public/media/1a634e73dfeff02c-s.woff2", weight: "500" },
+    { path: "../../public/media/1a634e73dfeff02c-s.woff2", weight: "600" },
+    { path: "../../public/media/1a634e73dfeff02c-s.woff2", weight: "700" },
+    { path: "../../public/media/1a634e73dfeff02c-s.woff2", weight: "800" },
+  ],
   variable: "--font-heading",
   display: "swap",
+  fallback: ["system-ui", "sans-serif"],
 });
 
-/** Nội dung bài viết, mô tả dài */
-const fontBody = Inter({
-  subsets: ["latin", "vietnamese"],
+const fontBody = localFont({
+  src: [
+    { path: "../../public/media/1e41be92c43b3255-s.p.woff2", weight: "300" },
+    { path: "../../public/media/1e41be92c43b3255-s.p.woff2", weight: "400" },
+    { path: "../../public/media/1e41be92c43b3255-s.p.woff2", weight: "500" },
+    { path: "../../public/media/1e41be92c43b3255-s.p.woff2", weight: "600" },
+    { path: "../../public/media/1e41be92c43b3255-s.p.woff2", weight: "700" },
+  ],
   variable: "--font-body",
   display: "swap",
+  fallback: ["system-ui", "sans-serif"],
 });
 
-/** Menu, nút, nhãn, form — bo tròn, dễ đọc */
-const fontUi = Manrope({
-  subsets: ["latin", "vietnamese"],
+const fontUi = localFont({
+  src: [
+    { path: "../../public/media/4120b0a488381b31-s.p.woff2", weight: "300" },
+    { path: "../../public/media/4120b0a488381b31-s.p.woff2", weight: "400" },
+    { path: "../../public/media/4120b0a488381b31-s.p.woff2", weight: "500" },
+    { path: "../../public/media/4120b0a488381b31-s.p.woff2", weight: "600" },
+    { path: "../../public/media/4120b0a488381b31-s.p.woff2", weight: "700" },
+    { path: "../../public/media/4120b0a488381b31-s.p.woff2", weight: "800" },
+  ],
   variable: "--font-ui",
   display: "swap",
+  fallback: ["system-ui", "sans-serif"],
+});
+
+const fontBrand = localFont({
+  src: [
+    { path: "../../public/media/62c97acc3aa63787-s.p.woff2", weight: "400" },
+    { path: "../../public/media/62c97acc3aa63787-s.p.woff2", weight: "500" },
+    { path: "../../public/media/62c97acc3aa63787-s.p.woff2", weight: "600" },
+    { path: "../../public/media/62c97acc3aa63787-s.p.woff2", weight: "700" },
+    { path: "../../public/media/62c97acc3aa63787-s.p.woff2", weight: "800" },
+  ],
+  variable: "--font-brand",
+  display: "swap",
+  fallback: ["system-ui", "sans-serif"],
 });
 
 const siteUrl = "https://khomanguon.io.vn";
@@ -45,6 +79,10 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Kho Mã Nguồn" }],
   creator: "Kho Mã Nguồn",
+  icons: {
+    icon: [{ url: "/brand/mark.svg", type: "image/svg+xml" }],
+    apple: "/brand/mark.svg",
+  },
   openGraph: {
     type: "website",
     locale: "vi_VN",
@@ -63,7 +101,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0d4a52",
+  themeColor: "#0d3d45",
   width: "device-width",
   initialScale: 1,
 };
@@ -82,14 +120,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     },
   };
 
-  const fontVars = `${fontHeading.variable} ${fontBody.variable} ${fontUi.variable}`;
+  const fontVars = `${fontHeading.variable} ${fontBody.variable} ${fontUi.variable} ${fontBrand.variable}`;
 
   return (
     <html lang="vi" className={fontVars}>
       <head>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </head>
-      <body className="font-body antialiased">{children}</body>
+      <body>
+        <AppProviders>
+          <AuthModalProvider>{children}</AuthModalProvider>
+        </AppProviders>
+      </body>
     </html>
   );
 }

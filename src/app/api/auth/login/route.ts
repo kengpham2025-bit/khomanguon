@@ -3,7 +3,6 @@ import { verifyPassword } from "@/lib/password";
 import { z } from "zod";
 import { getDb } from "@/lib/db";
 import { verifyTurnstile } from "@/lib/turnstile";
-import { turnstileSecret } from "@/lib/env-edge";
 import { SESSION_COOKIE_NAME, sessionCookieOptions, signSession } from "@/lib/auth";
 
 export const runtime = "edge";
@@ -23,7 +22,7 @@ export async function POST(req: Request) {
     const { email, password, turnstileToken } = parsed.data;
 
     const ip = req.headers.get("cf-connecting-ip") || req.headers.get("x-forwarded-for") || undefined;
-    const ok = await verifyTurnstile(turnstileSecret(), turnstileToken, ip);
+    const ok = await verifyTurnstile(undefined, turnstileToken, ip);
     if (!ok) {
       return NextResponse.json({ error: "Xác minh Captcha thất bại" }, { status: 400 });
     }

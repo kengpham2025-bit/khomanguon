@@ -8,6 +8,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/dang-nhap",
     "/dang-ky",
     "/cua-hang",
+    "/tin-tuc",
     "/dang-ky-ban-hang",
     "/rut-tien",
     "/xac-minh-cccd",

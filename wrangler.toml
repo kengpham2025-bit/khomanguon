@@ -6,3 +6,13 @@ compatibility_flags = ["nodejs_compat"]
 binding = "DB"
 database_name = "khomanguonnew"
 database_id = "a68e1aec-8fff-4a5f-a1cd-9a54d9623dd2"
+
+# ===== PayOS Environment Variables =====
+# Set these via: wrangler pages env production secret put PAYOS_CLIENT_ID
+#                wrangler pages env production secret put PAYOS_API_KEY
+#                wrangler pages env production secret put PAYOS_CHECKSUM_KEY
+#
+# Webhook URL cho PayOS: https://khomanguon.io.vn/api/deposit/webhook
+# Cấu hình trong PayOS Merchant Dashboard: https://merchant.payos.vn/
+[vars]
+NEXT_PUBLIC_APP_URL = "https://khomanguon.io.vn"

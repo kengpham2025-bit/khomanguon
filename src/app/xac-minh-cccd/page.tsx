@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { IconArrowLeft, IconShieldCheck, IconUpload, IconCheckCircle, IconAlertCircle } from "@/components/Icons";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 
@@ -13,73 +14,51 @@ export default function KycPage() {
   const [err, setErr] = useState("");
 
   function onFile(f: File | null) {
-    setB64(null);
-    setFileName("");
+    setB64(null); setFileName("");
     if (!f) return;
-    if (f.size > 350_000) {
-      setErr("Ảnh tối đa ~350KB. Vui lòng nén lại.");
-      return;
-    }
-    setErr("");
-    setFileName(f.name);
+    if (f.size > 350_000) { setErr("Ảnh tối đa ~350KB. Vui lòng nén lại."); return; }
+    setErr(""); setFileName(f.name);
     const r = new FileReader();
-    r.onload = () => {
-      const s = String(r.result || "");
-      setB64(s);
-    };
+    r.onload = () => { setB64(String(r.result || "")); };
     r.readAsDataURL(f);
   }
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
-    setErr("");
-    setMsg("");
-    const res = await fetch("/api/kyc/submit", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ note, cccdImageBase64: b64 ?? undefined }),
-    });
+    setErr(""); setMsg("");
+    const res = await fetch("/api/kyc/submit", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ note, cccdImageBase64: b64 ?? undefined }) });
     const d = (await res.json()) as { error?: string; message?: string; ok?: boolean };
-    if (!res.ok) {
-      setErr(d.error || "Lỗi");
-      return;
-    }
+    if (!res.ok) { setErr(d.error || "Lỗi"); return; }
     setMsg(d.message || "Đã gửi.");
   }
 
   return (
     <>
       <SiteHeader />
-      <main className="mx-auto max-w-lg px-4 py-12">
-        <Link href="/tai-khoan" className="text-sm text-brand-blue">
-          ← Tài khoản
-        </Link>
-        <h1 className="mt-4 text-2xl font-bold">Xác minh CCCD</h1>
-        <p className="mt-2 text-sm text-slate-600">
+      <main className="page-sm">
+        <Link href="/tai-khoan" className="back-link"><IconArrowLeft size={16} /> Tài khoản</Link>
+        <div className="flex items-center gap-3" style={{ marginTop: "var(--space-6)" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 48, height: 48, borderRadius: "var(--radius-full)", background: "rgba(139,92,246,0.1)" }}>
+            <IconShieldCheck size={24} color="var(--brand-accent)" />
+          </div>
+          <div>
+            <h1 style={{ fontSize: "1.5rem", fontWeight: 700 }}>Xác minh CCCD</h1>
+            <p style={{ fontSize: "0.875rem", color: "var(--text-secondary)" }}>Tích xanh — tăng độ tin cậy trên sản phẩm.</p>
+          </div>
+        </div>
+        <p className="page-desc" style={{ marginTop: "var(--space-4)" }}>
           Sau khi admin duyệt, tài khoản có trạng thái KYC; sản phẩm của bạn không còn cảnh báo đỏ. Chưa KYC vẫn bán được.
         </p>
-        <form onSubmit={submit} className="mt-8 space-y-4">
-          {err ? <p className="text-sm text-red-600">{err}</p> : null}
-          {msg ? <p className="text-sm text-emerald-700">{msg}</p> : null}
-          <textarea
-            className="pill-input min-h-[80px] rounded-2xl"
-            placeholder="Ghi chú (họ tên trên CCCD, số CCCD — tuỳ bạn)"
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-          />
+        <form onSubmit={submit} className="form-space" style={{ marginTop: "var(--space-8)" }}>
+          {err ? <div className="alert alert-error"><IconAlertCircle size={16} />{err}</div> : null}
+          {msg ? <div className="alert alert-success"><IconCheckCircle size={16} />{msg}</div> : null}
+          <textarea className="input-area" style={{ minHeight: 80 }} placeholder="Ghi chú (họ tên trên CCCD, số CCCD — tuỳ bạn)" value={note} onChange={(e) => setNote(e.target.value)} />
           <div>
-            <label className="text-sm font-medium text-slate-700">Ảnh CCCD (tuỳ chọn, nhỏ gọn)</label>
-            <input
-              type="file"
-              accept="image/*"
-              className="mt-2 block w-full text-sm"
-              onChange={(e) => onFile(e.target.files?.[0] ?? null)}
-            />
-            {fileName ? <p className="mt-1 text-xs text-slate-500">{fileName}</p> : null}
+            <label style={{ fontSize: "0.875rem", fontWeight: 500, color: "var(--text-primary)" }}>Ảnh CCCD (tuỳ chọn, nhỏ gọn)</label>
+            <input type="file" accept="image/*" style={{ display: "block", marginTop: "var(--space-2)", fontSize: "0.875rem" }} onChange={(e) => onFile(e.target.files?.[0] ?? null)} />
+            {fileName ? <p style={{ marginTop: "var(--space-1)", fontSize: "0.75rem", color: "var(--text-muted)" }}><IconCheckCircle size={12} style={{ display: "inline", verticalAlign: "middle" }} /> {fileName}</p> : null}
           </div>
-          <button type="submit" className="w-full rounded-full bg-brand-blue py-3 font-semibold text-white">
-            Gửi hồ sơ
-          </button>
+          <button type="submit" className="btn btn-blue w-full"><IconUpload size={16} /> Gửi hồ sơ</button>
         </form>
       </main>
       <SiteFooter />

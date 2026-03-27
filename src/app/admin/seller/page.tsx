@@ -21,9 +21,7 @@ export default function AdminSellerPage() {
     if (r.ok) setList(d.applications || []);
   }
 
-  useEffect(() => {
-    refresh();
-  }, []);
+  useEffect(() => { refresh(); }, []);
 
   async function act(id: string, action: "approve" | "reject") {
     await fetch("/api/admin/seller-applications", {
@@ -36,37 +34,25 @@ export default function AdminSellerPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold">Đơn đăng ký bán hàng</h1>
-      <ul className="mt-8 space-y-4">
+      <h1 className="page-title">Đơn đăng ký bán hàng</h1>
+      <div className="admin-list" style={{ marginTop: "var(--space-8)" }}>
         {list.map((a) => (
-          <li key={a.id} className="rounded-2xl border border-slate-100 bg-white p-4">
-            <p className="font-medium">
-              {a.name} — {a.email}
+          <div key={a.id} className="admin-card" style={{ padding: "var(--space-4)" }}>
+            <p style={{ fontWeight: 500 }}>{a.name} — {a.email}</p>
+            <p style={{ fontSize: "0.75rem", color: "var(--text-muted)", marginTop: "var(--space-1)" }}>
+              Trạng thái: <span className={`badge ${a.status === "pending" ? "badge-warning" : a.status === "approved" ? "badge-success" : "badge-error"}`}>{a.status}</span>
             </p>
-            <p className="text-xs text-slate-500">Trạng thái: {a.status}</p>
-            {a.message ? <p className="mt-2 text-sm text-slate-700">{a.message}</p> : null}
+            {a.message ? <p style={{ fontSize: "0.875rem", color: "var(--text-secondary)", marginTop: "var(--space-2)" }}>{a.message}</p> : null}
             {a.status === "pending" ? (
-              <div className="mt-3 flex gap-2">
-                <button
-                  type="button"
-                  className="rounded-full bg-brand-green px-4 py-2 text-sm font-semibold text-white"
-                  onClick={() => act(a.id, "approve")}
-                >
-                  Duyệt
-                </button>
-                <button
-                  type="button"
-                  className="rounded-full border border-red-200 px-4 py-2 text-sm text-red-700"
-                  onClick={() => act(a.id, "reject")}
-                >
-                  Từ chối
-                </button>
+              <div className="flex gap-2" style={{ marginTop: "var(--space-3)" }}>
+                <button type="button" className="btn btn-primary btn-sm" onClick={() => act(a.id, "approve")}>Duyệt</button>
+                <button type="button" className="btn btn-outline btn-sm" style={{ color: "var(--error)", borderColor: "#fecaca" }} onClick={() => act(a.id, "reject")}>Từ chối</button>
               </div>
             ) : null}
-          </li>
+          </div>
         ))}
-        {list.length === 0 ? <p className="text-slate-500">Chưa có đơn.</p> : null}
-      </ul>
+        {list.length === 0 ? <p style={{ color: "var(--text-muted)" }}>Chưa có đơn.</p> : null}
+      </div>
     </div>
   );
 }

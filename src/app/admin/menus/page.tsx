@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
+import { notifyError, notifySuccess } from "@/lib/notify";
 
 type Row = {
   id: string;
@@ -17,6 +19,7 @@ export default function AdminMenusPage() {
   const [href, setHref] = useState("");
   const [parentId, setParentId] = useState<string>("");
   const [err, setErr] = useState("");
+  const [deleteId, setDeleteId] = useState<string | null>(null);
 
   async function refresh() {
     const r = await fetch("/api/admin/menus");
@@ -24,9 +27,7 @@ export default function AdminMenusPage() {
     if (r.ok) setRows(d.menus || []);
   }
 
-  useEffect(() => {
-    refresh();
-  }, []);
+  useEffect(() => { refresh(); }, []);
 
   async function add(e: React.FormEvent) {
     e.preventDefault();
@@ -34,72 +35,76 @@ export default function AdminMenusPage() {
     const r = await fetch("/api/admin/menus", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        label,
-        href,
-        parentId: parentId || null,
-        sortOrder: 0,
-      }),
+      body: JSON.stringify({ label, href, parentId: parentId || null, sortOrder: 0 }),
     });
     const d = (await r.json()) as { error?: string };
     if (!r.ok) {
-      setErr(d.error || "Lỗi");
+      const m = d.error || "Lỗi";
+      setErr(m);
+      notifyError(m);
       return;
     }
-    setLabel("");
-    setHref("");
-    setParentId("");
+    notifySuccess("Đã thêm menu");
+    setLabel(""); setHref(""); setParentId("");
     refresh();
   }
 
-  async function remove(id: string) {
-    if (!confirm("Xóa menu này?")) return;
+  async function confirmDelete(id: string) {
     await fetch("/api/admin/menus", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id }),
     });
-    refresh();
+    setDeleteId(null);
+    notifySuccess("Đã xóa menu");
+    await refresh();
   }
 
   const parents = rows.filter((x) => !x.parent_id);
 
   return (
     <div>
-      <h1 className="text-2xl font-bold">Menu</h1>
-      <p className="mt-2 text-sm text-slate-600">Thêm menu cha (để trống menu cha) hoặc menu con (chọn parent).</p>
+      <ConfirmDialog
+        open={deleteId !== null}
+        onOpenChange={(open) => { if (!open) setDeleteId(null); }}
+        title="Xóa menu?"
+        description="Thao tác không hoàn tác. Menu sẽ biến mất trên header."
+        confirmLabel="Xóa"
+        variant="danger"
+        onConfirm={() => { if (deleteId) void confirmDelete(deleteId); }}
+      />
+      <h1 className="page-title">Menu</h1>
+      <p className="page-desc">Thêm menu cha (để trống menu cha) hoặc menu con (chọn parent).</p>
 
-      <form onSubmit={add} className="mt-8 grid gap-3 rounded-2xl border border-slate-200 bg-white p-6 sm:grid-cols-2">
-        {err ? <p className="sm:col-span-2 text-sm text-red-600">{err}</p> : null}
-        <input className="pill-input" placeholder="Nhãn" value={label} onChange={(e) => setLabel(e.target.value)} required />
-        <input className="pill-input" placeholder="Đường dẫn (/cua-hang)" value={href} onChange={(e) => setHref(e.target.value)} required />
-        <select className="pill-input sm:col-span-2" value={parentId} onChange={(e) => setParentId(e.target.value)}>
+      <form onSubmit={add} className="admin-card" style={{ marginTop: "var(--space-8)", display: "grid", gap: "var(--space-3)" }}>
+        {err ? <p style={{ gridColumn: "1 / -1", fontSize: "0.875rem", color: "var(--error-text)" }}>{err}</p> : null}
+        <div className="grid sm\:grid-2 gap-3">
+          <input className="input" placeholder="Nhãn" value={label} onChange={(e) => setLabel(e.target.value)} required />
+          <input className="input" placeholder="Đường dẫn (vd. /tin-tuc)" value={href} onChange={(e) => setHref(e.target.value)} required />
+        </div>
+        <select className="select" value={parentId} onChange={(e) => setParentId(e.target.value)}>
           <option value="">Menu cha (cấp 1)</option>
           {parents.map((p) => (
-            <option key={p.id} value={p.id}>
-              Con của: {p.label}
-            </option>
+            <option key={p.id} value={p.id}>Con của: {p.label}</option>
           ))}
         </select>
-        <button type="submit" className="sm:col-span-2 rounded-full bg-brand-green py-3 font-semibold text-white">
-          Thêm menu
-        </button>
+        <button type="submit" className="btn btn-primary w-full">Thêm menu</button>
       </form>
 
-      <ul className="mt-10 space-y-4">
+      <div className="admin-list" style={{ marginTop: "var(--space-10)" }}>
         {rows.map((m) => (
-          <li key={m.id} className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-slate-100 bg-white px-4 py-3 text-sm">
+          <div key={m.id} className="admin-item">
             <span>
               {m.parent_id ? "↳ " : ""}
               <strong>{m.label}</strong> — {m.href}{" "}
-              <span className="text-slate-400">({m.is_active ? "bật" : "tắt"})</span>
+              <span style={{ color: "var(--text-muted)" }}>({m.is_active ? "bật" : "tắt"})</span>
             </span>
-            <button type="button" className="text-red-600 hover:underline" onClick={() => remove(m.id)}>
+            <button type="button" className="btn btn-ghost" style={{ color: "var(--error)", fontSize: "0.8125rem" }} onClick={() => setDeleteId(m.id)}>
               Xóa
             </button>
-          </li>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { sha256Hex } from "@/lib/hash";
-import { sendTransactionalEmail, forgotPasswordHtml } from "@/lib/email";
+import { sendTransactionalEmail, forgotPasswordHtml, getAppUrl } from "@/lib/email";
 
 export const runtime = "edge";
 
@@ -56,10 +56,11 @@ export async function POST(req: Request) {
       )
       .run();
 
+    const appUrl = await getAppUrl();
     await sendTransactionalEmail({
       to: email,
       subject: "Mã OTP đặt lại mật khẩu - Kho Mã Nguồn",
-      html: forgotPasswordHtml(code),
+      html: forgotPasswordHtml(code, appUrl),
     });
 
     return NextResponse.json({ ok: true, message: "Đã gửi mã OTP qua email." });

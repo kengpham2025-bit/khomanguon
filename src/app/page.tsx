@@ -1,85 +1,336 @@
+"use client";
+
 import Link from "next/link";
-import Image from "next/image";
-import { ArrowRight } from "lucide-react";
+import { useEffect, useState, useCallback, useRef } from "react";
+import {
+  IconArrowRight,
+  IconAlertTriangle,
+  IconBadgeCheck,
+  IconChevronLeft,
+  IconChevronRight,
+  IconPhone,
+  IconMail,
+  IconShieldCheck,
+  IconStar,
+  IconEye,
+  IconTag,
+  IconStore,
+} from "@/components/Icons";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { useAuthModal } from "@/components/AuthModal";
+
+type Product = {
+  id: string;
+  title: string;
+  slug: string;
+  description: string | null;
+  price_cents: number;
+  seller_name: string;
+  kycWarning: boolean;
+  category_slug: string | null;
+};
+
+type MenuItem = {
+  id: string;
+  label: string;
+  href: string;
+  sort_order: number;
+  children: { id: string; label: string; href: string; sort_order: number }[];
+};
+
+function formatVnd(n: number) {
+  return new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+    maximumFractionDigits: 0,
+  }).format(n);
+}
+
+const BANNERS = [
+  { src: "/banners/banner1-cho-ma-nguon.html", alt: "Kho Mã Nguồn" },
+  { src: "/banners/banner2-tai-khoan-ai.html", alt: "Tài khoản AI & Game" },
+  { src: "/banners/banner3-mmo.html", alt: "Đăng ký bán hàng", authAction: "register" as const },
+  { src: "/banners/banner4-youtube.html", alt: "Tài khoản YouTube" },
+  { src: "/banners/banner5-tiktok.html", alt: "Tài khoản TikTok" },
+];
+
+function HeroSlider({ openAuth }: { openAuth: (mode: "login" | "register") => void }) {
+  const [idx, setIdx] = useState(0);
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const [viewportW, setViewportW] = useState(0);
+  const total = BANNERS.length;
+
+  const next = useCallback(() => setIdx((i) => (i + 1) % total), [total]);
+  const prev = useCallback(() => setIdx((i) => (i - 1 + total) % total), [total]);
+
+  useEffect(() => {
+    const el = viewportRef.current;
+    if (!el) return;
+    const measure = () => setViewportW(el.getBoundingClientRect().width);
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const timer = setInterval(next, 4500);
+    return () => clearInterval(timer);
+  }, [next]);
+
+  const trackStyle = { transform: `translate3d(-${idx * viewportW}px, 0, 0)` };
+
+  return (
+    <div className="store-slider" ref={viewportRef}>
+      <div className="store-slider-track" style={trackStyle}>
+        {BANNERS.map((b, i) => (
+          <div
+            key={i}
+            className="store-slider-slide"
+            style={
+              viewportW > 0
+                ? { width: viewportW, flex: "0 0 auto" }
+                : { flex: "0 0 100%" }
+            }
+          >
+            {"authAction" in b ? (
+              <button
+                type="button"
+                className="store-slider-html-wrap store-slider-slide-btn"
+                onClick={() => openAuth(b.authAction!)}
+                aria-label={b.alt}
+              >
+                <iframe
+                  src={b.src}
+                  title={b.alt}
+                  className="store-slider-iframe"
+                  loading={i === 0 ? "eager" : "lazy"}
+                  allow="autoplay; fullscreen"
+                  style={{ pointerEvents: "none" }}
+                />
+                <div className="store-slider-html-overlay" />
+              </button>
+            ) : (
+              <div className="store-slider-html-wrap">
+                <iframe
+                  src={b.src}
+                  title={b.alt}
+                  className="store-slider-iframe"
+                  loading={i === 0 ? "eager" : "lazy"}
+                  allow="autoplay; fullscreen"
+                />
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+      <button type="button" className="store-slider-arrow store-slider-prev" onClick={prev} aria-label="Trước">
+        <IconChevronLeft size={22} />
+      </button>
+      <button type="button" className="store-slider-arrow store-slider-next" onClick={next} aria-label="Sau">
+        <IconChevronRight size={22} />
+      </button>
+      <div className="store-slider-dots">
+        {BANNERS.map((_, i) => (
+          <button
+            key={i}
+            type="button"
+            className={`store-slider-dot ${i === idx ? "store-slider-dot-active" : ""}`}
+            onClick={() => setIdx(i)}
+            aria-label={`Slide ${i + 1}`}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ProductCard({ product }: { product: Product }) {
+  return (
+    <article className={`store-card ${product.kycWarning ? "store-card-warn" : ""}`}>
+      <Link href={`/cua-hang/${product.slug}`} className="store-card-img-link">
+        <div className="store-card-img">
+          <span className="store-card-img-placeholder">
+            <IconStore size={36} color="var(--text-muted)" />
+          </span>
+          <div className="store-card-overlay">
+            <span className="store-card-overlay-btn">
+              <IconEye size={16} /> Xem
+            </span>
+          </div>
+          {product.kycWarning ? (
+            <span className="store-card-badge store-card-badge-warn">
+              <IconAlertTriangle size={12} /> Chưa xác minh
+            </span>
+          ) : (
+            <span className="store-card-badge store-card-badge-ok">
+              <IconBadgeCheck size={12} /> Đã xác minh
+            </span>
+          )}
+        </div>
+      </Link>
+
+      <div className="store-card-body">
+        <Link href={`/cua-hang/${product.slug}`} className="store-card-title">
+          {product.title}
+        </Link>
+        <p className="store-card-desc">{product.description || "—"}</p>
+
+        <div className="store-card-meta">
+          <span className="store-card-seller">
+            <IconShieldCheck size={13} /> {product.seller_name}
+          </span>
+        </div>
+
+        <div className="store-card-footer">
+          <span className="store-card-price">{formatVnd(product.price_cents)}</span>
+          <Link href={`/cua-hang/${product.slug}`} className="store-card-btn">
+            Mua ngay <IconArrowRight size={13} />
+          </Link>
+        </div>
+      </div>
+    </article>
+  );
+}
 
 export default function HomePage() {
+  const { open: openAuth } = useAuthModal();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [menus, setMenus] = useState<MenuItem[]>([]);
+
+  useEffect(() => {
+    fetch("/api/products")
+      .then((r) => r.json() as Promise<{ products?: Product[] }>)
+      .then((d) => setProducts(d.products ?? []))
+      .catch(() => {});
+    fetch("/api/menus")
+      .then((r) => r.json() as Promise<{ menus?: MenuItem[] }>)
+      .then((d) => setMenus(d.menus ?? []))
+      .catch(() => {});
+  }, []);
+
+  const showcase = products.slice(0, 8);
+  const topMenus = menus.filter((m) => !m.href.startsWith("/admin"));
+
   return (
     <>
       <SiteHeader />
-      <main>
-        <section className="relative grid min-h-[520px] overflow-hidden lg:grid-cols-2">
-          <div className="relative z-10 flex flex-col justify-center bg-gradient-to-br from-[#062a2e] via-[#0d4a52] to-[#0a3d42] px-6 py-16 text-white lg:px-16">
-            <p className="font-ui text-sm font-semibold uppercase tracking-widest text-emerald-200/90">Nền tảng</p>
-            <h1 className="mt-3 max-w-xl font-heading text-3xl font-bold leading-tight md:text-4xl lg:text-[2.35rem]">
-              Chợ mã nguồn, tài khoản MMO &amp; dịch vụ AI được tin dùng
-            </h1>
-            <p className="mt-4 max-w-lg font-body text-sm leading-relaxed text-slate-200 md:text-base">
-              Đăng ký với xác nhận email và Captcha. Người bán duyệt qua admin, KYC CCCD để có tích xanh; chưa KYC vẫn bán
-              được nhưng sản phẩm hiển thị cảnh báo đỏ cho người mua.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-4">
-              <Link
-                href="/dang-ky"
-                className="font-ui inline-flex items-center gap-3 rounded-full bg-brand-green px-8 py-4 text-sm font-semibold text-white shadow-lg hover:brightness-110"
-              >
-                Đăng ký miễn phí
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/20">
-                  <ArrowRight className="h-5 w-5" />
-                </span>
-              </Link>
-              <Link
-                href="/dang-nhap"
-                className="font-ui inline-flex items-center rounded-full border border-white/30 px-6 py-4 text-sm font-semibold text-white hover:bg-white/10"
-              >
-                Đăng nhập
-              </Link>
+      <main className="store-main">
+
+        {/* ── Hero Slider ── */}
+        <section className="store-hero-section">
+          <div className="store-hero-inner">
+            <HeroSlider openAuth={openAuth} />
+          </div>
+        </section>
+
+        {/* ── Category Quick Nav ── */}
+        {topMenus.length > 0 && (
+          <section className="store-categories">
+            <div className="container">
+              <div className="store-categories-inner">
+                {topMenus.slice(0, 8).map((m) => (
+                  <Link key={m.id} href={m.href} className="store-cat-pill">
+                    <IconTag size={15} />
+                    {m.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* ── USP Strip ── */}
+        <section className="store-usp">
+          <div className="container">
+            <div className="store-usp-grid">
+              <div className="store-usp-item">
+                <IconShieldCheck size={22} color="var(--brand-green)" />
+                <div>
+                  <strong>Gian hàng uy tín</strong>
+                  <span>Người bán được xác minh danh tính</span>
+                </div>
+              </div>
+              <div className="store-usp-item">
+                <IconPhone size={22} color="var(--brand-green)" />
+                <div>
+                  <strong>Hỗ trợ 24/7</strong>
+                  <span>Luôn sẵn sàng giải đáp thắc mắc</span>
+                </div>
+              </div>
+              <div className="store-usp-item">
+                <IconStar size={22} color="var(--brand-green)" />
+                <div>
+                  <strong>Đánh giá thực</strong>
+                  <span>Cộng đồng đánh giá minh bạch</span>
+                </div>
+              </div>
+              <div className="store-usp-item">
+                <IconMail size={22} color="var(--brand-green)" />
+                <div>
+                  <strong>Thanh toán an toàn</strong>
+                  <span>Qua cổng PayOS, bảo mật cao</span>
+                </div>
+              </div>
             </div>
           </div>
-          <div className="relative min-h-[280px] bg-slate-900 lg:min-h-0">
-            <Image
-              src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80"
-              alt="Thương mại số và logistics"
-              fill
-              className="object-cover opacity-90"
-              priority
-              sizes="(max-width: 1024px) 100vw, 50vw"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#0d4a52]/80 to-transparent lg:from-[#0d4a52]" />
-          </div>
         </section>
 
-        <section className="border-y border-slate-100 bg-white py-10">
-          <p className="text-center font-ui text-xs font-semibold uppercase tracking-wider text-slate-400">
-            Đối tác / thương hiệu — thêm logo khi bạn triển khai
-          </p>
-          <div className="mx-auto mt-6 flex max-w-5xl flex-wrap items-center justify-center gap-10 px-4 opacity-40 grayscale">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="h-8 w-24 rounded bg-slate-200" aria-hidden />
-            ))}
-          </div>
-        </section>
-
-        <section className="mx-auto max-w-4xl px-4 py-20 text-center">
-          <h2 className="font-heading text-3xl font-bold text-slate-900 md:text-4xl">Một nền tảng, mọi nhu cầu số</h2>
-          <p className="mx-auto mt-4 max-w-2xl font-body text-slate-600">
-            Mã nguồn website, tool, tài khoản game MMO, và dịch vụ liên quan tài khoản AI — quản lý qua admin, menu động,
-            không dữ liệu mẫu cố định.
-          </p>
-          <div className="mt-10 grid gap-6 text-left sm:grid-cols-3">
-            {[
-              { t: "Mã nguồn", d: "Theme, script, API, template do người bán đăng sau khi được duyệt." },
-              { t: "Tài khoản MMO", d: "Gian hàng cho tài khoản game — hiển thị cảnh báo nếu seller chưa KYC." },
-              { t: "Dịch vụ AI", d: "Gói dịch vụ tài khoản AI — SEO tối ưu cho domain khomanguon.io.vn." },
-            ].map((x) => (
-              <div key={x.t} className="rounded-2xl border border-slate-100 bg-slate-50/80 p-6">
-                <h3 className="font-heading text-lg font-semibold text-slate-900">{x.t}</h3>
-                <p className="mt-2 font-body text-sm text-slate-600">{x.d}</p>
+        {/* ── Featured Products ── */}
+        <section className="store-products-section">
+          <div className="container">
+            <div className="store-section-header">
+              <div>
+                <h2 className="store-section-title">
+                  <IconTag size={22} color="var(--brand-green)" />
+                  Sản phẩm nổi bật
+                </h2>
+                <p className="store-section-sub">Các sản phẩm được quan tâm nhiều nhất trên sàn</p>
               </div>
-            ))}
+              <Link href="/cua-hang" className="store-section-more">
+                Xem tất cả <IconArrowRight size={15} />
+              </Link>
+            </div>
+
+            {showcase.length === 0 ? (
+              <div className="store-empty">
+                <IconStore size={48} color="var(--text-muted)" />
+                <p>Chưa có sản phẩm nào trên sàn.</p>
+                <button type="button" className="btn btn-primary" style={{ marginTop: "var(--space-4)" }} onClick={() => openAuth("register")}>
+                  Trở thành người bán
+                </button>
+              </div>
+            ) : (
+              <div className="store-products-grid">
+                {showcase.map((p) => (
+                  <ProductCard key={p.id} product={p} />
+                ))}
+              </div>
+            )}
           </div>
         </section>
+
+        {/* ── CTA Banner ── */}
+        <section className="store-cta-section">
+          <div className="container">
+            <div className="store-cta-inner">
+              <div className="store-cta-text">
+                <h2>Bạn có sản phẩm để bán?</h2>
+                <p>Đăng ký gian hàng miễn phí, đăng sản phẩm và bắt đầu kiếm thu nhập ngay hôm nay.</p>
+              </div>
+              <div className="store-cta-actions">
+                <button type="button" className="btn btn-primary btn-lg" onClick={() => openAuth("register")}>
+                  Đăng ký bán hàng
+                </button>
+                <button type="button" className="btn store-btn-outline btn-lg" onClick={() => openAuth("login")}>
+                  Đăng nhập
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
       </main>
       <SiteFooter />
     </>

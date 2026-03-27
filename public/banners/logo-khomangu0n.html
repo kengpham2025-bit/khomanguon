@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Logo KhoMaNguon</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{min-height:100vh;background:#f0f4f0;font-family:'Be Vietnam Pro',sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:60px;padding:60px}
+.card{background:#fff;border-radius:24px;padding:60px 80px;box-shadow:0 4px 30px rgba(0,0,0,.06);display:flex;align-items:center;justify-content:center}
+.card-dark{background:#0f1a14;box-shadow:0 4px 30px rgba(0,0,0,.3)}
+.row{display:flex;gap:40px;align-items:center;flex-wrap:wrap;justify-content:center}
+.label{color:#999;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;text-align:center}
+</style>
+</head>
+<body>
+
+<!-- LOGO trên nền trắng -->
+<div>
+  <div class="label" style="margin-bottom:16px">Light Background</div>
+  <div class="card">
+    <svg width="400" height="90" viewBox="0 0 400 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="g1" x1="0" y1="0" x2="76" y2="76" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#059669"/>
+          <stop offset="100%" stop-color="#10B981"/>
+        </linearGradient>
+        <filter id="s1" x="-15%" y="-15%" width="130%" height="140%">
+          <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#059669" flood-opacity="0.25"/>
+        </filter>
+      </defs>
+      <!-- Icon -->
+      <g filter="url(#s1)">
+        <rect x="5" y="7" width="76" height="76" rx="20" fill="url(#g1)"/>
+      </g>
+      <path d="M34 28L21 45L34 62" stroke="#fff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M52 28L65 45L52 62" stroke="#fff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M48 23L38 67" stroke="#fff" stroke-width="3.5" stroke-linecap="round" opacity="0.6"/>
+      <circle cx="71" cy="17" r="4.5" fill="#34D399" opacity="0.8"/>
+      <!-- Text -->
+      <text x="100" y="42" font-family="'Be Vietnam Pro',sans-serif" font-weight="900" font-size="34" letter-spacing="-0.5">
+        <tspan fill="#059669">Kho</tspan><tspan fill="#1a1a2e">MaNguon</tspan>
+      </text>
+      <!-- Tagline -->
+      <text x="100" y="64" font-family="'Be Vietnam Pro',sans-serif" font-weight="600" font-size="12" fill="#059669" letter-spacing="4" opacity="0.6">
+        KHOMANGU0N.IO.VN
+      </text>
+    </svg>
+  </div>
+</div>
+
+<!-- LOGO trên nền tối -->
+<div>
+  <div class="label" style="margin-bottom:16px">Dark Background</div>
+  <div class="card card-dark">
+    <svg width="400" height="90" viewBox="0 0 400 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="g2" x1="0" y1="0" x2="76" y2="76" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#059669"/>
+          <stop offset="100%" stop-color="#10B981"/>
+        </linearGradient>
+        <filter id="s2" x="-15%" y="-15%" width="130%" height="140%">
+          <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#10B981" flood-opacity="0.35"/>
+        </filter>
+      </defs>
+      <g filter="url(#s2)">
+        <rect x="5" y="7" width="76" height="76" rx="20" fill="url(#g2)"/>
+      </g>
+      <path d="M34 28L21 45L34 62" stroke="#fff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M52 28L65 45L52 62" stroke="#fff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M48 23L38 67" stroke="#fff" stroke-width="3.5" stroke-linecap="round" opacity="0.6"/>
+      <circle cx="71" cy="17" r="4.5" fill="#34D399" opacity="0.8"/>
+      <text x="100" y="42" font-family="'Be Vietnam Pro',sans-serif" font-weight="900" font-size="34" letter-spacing="-0.5">
+        <tspan fill="#10B981">Kho</tspan><tspan fill="#fff">MaNguon</tspan>
+      </text>
+      <text x="100" y="64" font-family="'Be Vietnam Pro',sans-serif" font-weight="600" font-size="12" fill="#34D399" letter-spacing="4" opacity="0.6">
+        KHOMANGU0N.IO.VN
+      </text>
+    </svg>
+  </div>
+</div>
+
+<!-- ICON ONLY -->
+<div>
+  <div class="label" style="margin-bottom:16px">Icon Only</div>
+  <div class="row">
+    <div class="card" style="padding:30px 40px">
+      <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="g3" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#059669"/>
+            <stop offset="100%" stop-color="#10B981"/>
+          </linearGradient>
+        </defs>
+        <rect width="80" height="80" rx="20" fill="url(#g3)"/>
+        <path d="M32 24L18 40L32 56" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M48 24L62 40L48 56" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M45 18L35 62" stroke="#fff" stroke-width="3.5" stroke-linecap="round" opacity="0.55"/>
+        <circle cx="67" cy="13" r="5" fill="#34D399" opacity="0.8"/>
+      </svg>
+    </div>
+    <div class="card card-dark" style="padding:30px 40px">
+      <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="80" height="80" rx="20" fill="url(#g3)"/>
+        <path d="M32 24L18 40L32 56" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M48 24L62 40L48 56" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M45 18L35 62" stroke="#fff" stroke-width="3.5" stroke-linecap="round" opacity="0.55"/>
+        <circle cx="67" cy="13" r="5" fill="#34D399" opacity="0.8"/>
+      </svg>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

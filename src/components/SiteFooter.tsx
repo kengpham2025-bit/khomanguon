@@ -1,34 +1,45 @@
+"use client";
+
 import Link from "next/link";
+import { IconMail, IconFileText } from "@/components/Icons";
+import { SiteLogo } from "@/components/SiteLogo";
+import { useAuthModal } from "@/components/AuthModal";
 
 export function SiteFooter() {
+  const { open: openAuth } = useAuthModal();
+
   return (
-    <footer className="border-t border-slate-100 bg-slate-50 py-12 font-body text-sm text-slate-600">
-      <div className="mx-auto grid max-w-6xl gap-8 px-4 md:grid-cols-3">
+    <footer className="site-footer">
+      <div className="footer-grid">
         <div>
-          <p className="font-heading text-base font-semibold text-slate-900">Kho Mã Nguồn</p>
-          <p className="mt-2 leading-relaxed">Mã nguồn, tài khoản MMO và dịch vụ AI — khomanguon.io.vn</p>
+          <div className="flex flex-col gap-3 items-start">
+            <SiteLogo height={48} />
+            <p style={{ fontSize: "1rem", fontWeight: 500, color: "var(--text-secondary)", lineHeight: 1.7 }}>
+              Nền tảng giao dịch mã nguồn, tài khoản MMO và dịch vụ AI đáng tin cậy
+            </p>
+          </div>
         </div>
         <div>
-          <p className="font-ui text-sm font-semibold uppercase tracking-wide text-slate-800">Khách hàng</p>
-          <ul className="mt-2 space-y-1 font-body">
-            <li>
-              <Link href="/cua-hang" className="hover:text-brand-blue">
-                Cửa hàng
-              </Link>
-            </li>
-            <li>
-              <Link href="/dang-ky-ban-hang" className="hover:text-brand-blue">
-                Đăng ký bán hàng
-              </Link>
-            </li>
-          </ul>
+          <p className="footer-heading">Khách hàng</p>
+          <nav style={{ display: "flex", flexDirection: "column", gap: "var(--space-1)" }}>
+            <Link href="/tin-tuc" className="footer-link">
+              <IconFileText size={14} style={{ display: "inline", marginRight: "0.375rem" }} /> Tin tức
+            </Link>
+            <button type="button" className="footer-link" style={{ background: "none", border: "none", padding: 0, textAlign: "left" }} onClick={() => openAuth("register")}>Đăng ký bán hàng</button>
+          </nav>
         </div>
         <div>
-          <p className="font-ui text-sm font-semibold uppercase tracking-wide text-slate-800">Pháp lý</p>
-          <p className="mt-2 leading-relaxed">Tuân thủ bảo vệ dữ liệu cá nhân. KYC tùy chọn để hiển thị tích xanh.</p>
+          <p className="footer-heading">Liên hệ</p>
+          <nav style={{ display: "flex", flexDirection: "column", gap: "var(--space-1)" }}>
+            <a href="mailto:support@khomanguon.io.vn" className="footer-link">
+              <IconMail size={14} style={{ display: "inline", marginRight: "0.375rem" }} /> support@khomanguon.io.vn
+            </a>
+            <button type="button" className="footer-link" style={{ background: "none", border: "none", padding: 0, textAlign: "left" }} onClick={() => openAuth("register")}>Đăng ký thành viên</button>
+            <button type="button" className="footer-link" style={{ background: "none", border: "none", padding: 0, textAlign: "left" }} onClick={() => openAuth("login")}>Đăng nhập</button>
+          </nav>
         </div>
       </div>
-      <p className="mt-8 text-center font-ui text-xs text-slate-400">© {new Date().getFullYear()} Kho Mã Nguồn</p>
+      <p className="footer-bottom">© {new Date().getFullYear()} KHOMANGUON. Mọi quyền được bảo lưu.</p>
     </footer>
   );
 }

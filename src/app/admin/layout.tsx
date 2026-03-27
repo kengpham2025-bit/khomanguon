@@ -1,28 +1,50 @@
 import Link from "next/link";
+import { IconGrid, IconStore, IconShieldCheck, IconFileText, IconGlobe, IconSettings } from "@/components/Icons";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-slate-50 font-body">
-      <div className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-4 px-4 py-3 font-ui text-sm">
-          <Link href="/admin" className="font-heading font-bold text-brand-blue">
-            Admin
+    <div className="admin-layout">
+      <div className="admin-topbar">
+        <div className="admin-topbar-inner">
+          <Link href="/admin" className="admin-logo">
+            <span className="flex items-center gap-2">
+              <IconSettings size={18} />
+              Admin Panel
+            </span>
           </Link>
-          <Link href="/admin/menus" className="text-slate-600 hover:text-brand-green">
-            Menu
+          <Link href="/admin/menus" className="admin-nav-link">
+            <span className="flex items-center gap-1">
+              <IconGrid size={14} /> Menu
+            </span>
           </Link>
-          <Link href="/admin/seller" className="text-slate-600 hover:text-brand-green">
-            Đơn bán hàng
+          <Link href="/admin/settings" className="admin-nav-link">
+            <span className="flex items-center gap-1">
+              <IconSettings size={14} /> Cài đặt
+            </span>
           </Link>
-          <Link href="/admin/kyc" className="text-slate-600 hover:text-brand-green">
-            KYC
+          <Link href="/admin/seller" className="admin-nav-link">
+            <span className="flex items-center gap-1">
+              <IconStore size={14} /> Đơn bán hàng
+            </span>
           </Link>
-          <Link href="/" className="ml-auto text-slate-400 hover:text-slate-700">
-            Về trang chủ
+          <Link href="/admin/kyc" className="admin-nav-link">
+            <span className="flex items-center gap-1">
+              <IconShieldCheck size={14} /> KYC
+            </span>
+          </Link>
+          <Link href="/admin/news" className="admin-nav-link">
+            <span className="flex items-center gap-1">
+              <IconFileText size={14} /> Tin tức
+            </span>
+          </Link>
+          <Link href="/" className="admin-back">
+            <span className="flex items-center gap-1">
+              <IconGlobe size={14} /> Về trang chủ
+            </span>
           </Link>
         </div>
       </div>
-      <div className="mx-auto max-w-5xl px-4 py-8">{children}</div>
+      <div className="admin-body">{children}</div>
     </div>
   );
 }

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Banner - Tài Khoản AI | KhoMaNguon.IO.VN</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{display:flex;justify-content:center;align-items:center;min-height:100vh;background:#fff7ed;font-family:'Be Vietnam Pro',sans-serif}
+.banner{width:1200px;height:500px;background:linear-gradient(135deg,#1a0533 0%,#2d1b69 30%,#4a1a8a 60%,#6c3ce0 100%);border-radius:24px;position:relative;overflow:hidden;display:flex;align-items:center;box-shadow:0 20px 60px rgba(108,60,224,.3)}
+.banner::before{content:'';position:absolute;top:-150px;right:100px;width:400px;height:400px;background:radial-gradient(circle,rgba(138,43,226,.3) 0%,transparent 70%);border-radius:50%}
+.banner::after{content:'';position:absolute;bottom:-120px;left:100px;width:350px;height:350px;background:radial-gradient(circle,rgba(0,200,255,.15) 0%,transparent 70%);border-radius:50%}
+.nl{position:absolute;background:linear-gradient(90deg,transparent,rgba(138,43,226,.3),transparent);height:1px;animation:pulse 3s ease-in-out infinite}
+.nl-1{width:300px;top:80px;left:50px;transform:rotate(15deg)}.nl-2{width:200px;top:200px;left:300px;transform:rotate(-10deg);animation-delay:.5s}.nl-3{width:250px;bottom:120px;right:100px;transform:rotate(25deg);animation-delay:1s}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+.neuron{position:absolute;width:8px;height:8px;border-radius:50%;animation:np 4s ease-in-out infinite}
+.n1{top:60px;left:100px;background:rgba(138,43,226,.6);box-shadow:0 0 15px rgba(138,43,226,.5)}
+.n2{top:150px;left:350px;background:rgba(0,200,255,.6);box-shadow:0 0 15px rgba(0,200,255,.5);animation-delay:.7s}
+.n3{top:380px;left:200px;background:rgba(138,43,226,.6);box-shadow:0 0 15px rgba(138,43,226,.5);animation-delay:1.4s}
+.n4{top:100px;right:250px;background:rgba(0,200,255,.6);box-shadow:0 0 15px rgba(0,200,255,.5);animation-delay:2.1s}
+@keyframes np{0%,100%{transform:scale(1);opacity:.5}50%{transform:scale(1.8);opacity:1}}
+.brand{position:absolute;top:28px;right:35px;z-index:10;display:flex;align-items:center;gap:12px}
+.brand-text{color:#fff;font-size:22px;font-weight:900;text-shadow:0 2px 10px rgba(139,92,246,.4)}
+.content-left{flex:1;padding:50px 40px 50px 60px;position:relative;z-index:2}
+.badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,rgba(139,92,246,.3),rgba(6,182,212,.3));backdrop-filter:blur(10px);color:#C4B5FD;font-size:13px;font-weight:700;padding:6px 18px;border-radius:50px;margin-bottom:18px;letter-spacing:1px;text-transform:uppercase;border:1px solid rgba(139,92,246,.3)}
+.badge svg{width:16px;height:16px;fill:#C4B5FD}
+.headline{font-size:54px;font-weight:900;line-height:1.1;margin-bottom:10px}
+.headline span{display:block;background:linear-gradient(135deg,#C4B5FD,#06B6D4,#A78BFA);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sub-headline{font-size:22px;font-weight:600;color:rgba(196,181,253,.9);margin-bottom:6px}
+.description{font-size:15px;color:rgba(196,181,253,.7);margin-bottom:28px;line-height:1.6;max-width:420px}
+.ai-brands{display:flex;gap:12px;margin-bottom:28px}
+.ai-brand-tag{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.06);backdrop-filter:blur(10px);padding:10px 18px;border-radius:14px;border:1px solid rgba(139,92,246,.2);transition:all .3s}
+.ai-brand-tag:hover{border-color:rgba(139,92,246,.5);background:rgba(255,255,255,.1)}
+.ai-brand-tag svg{width:24px;height:24px;flex-shrink:0}
+.ai-brand-tag .name{color:#E0D5FF;font-size:13px;font-weight:700}
+.ai-brand-tag .price{color:#06B6D4;font-size:11px;font-weight:600}
+.cta-btn{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,#8B5CF6,#06B6D4);color:#fff;font-size:18px;font-weight:800;padding:16px 40px;border-radius:60px;border:none;cursor:pointer;text-transform:uppercase;letter-spacing:1px;box-shadow:0 8px 30px rgba(139,92,246,.4);transition:all .3s;text-decoration:none}
+.cta-btn:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(139,92,246,.6)}
+.cta-btn svg{width:20px;height:20px;fill:#fff}
+.content-right{flex:0 0 480px;height:100%;position:relative;z-index:2;display:flex;align-items:center;justify-content:center}
+.ai-brain{width:260px;height:260px;position:relative;animation:bf 5s ease-in-out infinite}
+@keyframes bf{0%,100%{transform:translateY(0)}50%{transform:translateY(-15px)}}
+.brain-core{width:160px;height:160px;background:linear-gradient(135deg,rgba(139,92,246,.2),rgba(6,182,212,.2));border-radius:50%;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);border:2px solid rgba(139,92,246,.3);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(20px);box-shadow:0 0 60px rgba(139,92,246,.2),inset 0 0 40px rgba(139,92,246,.1)}
+.brain-core svg{width:70px;height:70px;fill:url(#brainGrad);filter:drop-shadow(0 0 20px rgba(139,92,246,.5))}
+.orbit{position:absolute;border:1px solid rgba(139,92,246,.15);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%)}
+.orbit-1{width:200px;height:200px}.orbit-2{width:260px;height:260px;border-color:rgba(6,182,212,.1)}
+.od{width:12px;height:12px;border-radius:50%;position:absolute;animation:os 8s linear infinite}
+.od-1{background:#8B5CF6;box-shadow:0 0 10px #8B5CF6;top:0;left:50%;transform:translateX(-50%)}
+.od-2{background:#06B6D4;box-shadow:0 0 10px #06B6D4;bottom:0;right:0;animation-duration:12s;animation-direction:reverse}
+.od-3{background:#F472B6;box-shadow:0 0 10px #F472B6;top:50%;left:0;animation-duration:10s}
+@keyframes os{0%{transform:rotate(0deg) translateX(100px) rotate(0deg)}100%{transform:rotate(360deg) translateX(100px) rotate(-360deg)}}
+.afc{position:absolute;background:rgba(255,255,255,.06);backdrop-filter:blur(20px);border-radius:16px;padding:14px 18px;border:1px solid rgba(139,92,246,.2);display:flex;align-items:center;gap:10px;animation:cf 5s ease-in-out infinite}
+.afc-1{top:50px;right:30px}.afc-2{bottom:70px;right:10px;animation-delay:1.5s}.afc-3{bottom:160px;left:-30px;animation-delay:3s}
+@keyframes cf{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.afc svg{width:28px;height:28px;flex-shrink:0}
+.afc-name{font-size:12px;font-weight:700;color:#E0D5FF;white-space:nowrap}
+.afc-desc{font-size:10px;color:rgba(196,181,253,.6)}
+</style>
+</head>
+<body>
+<svg style="position:absolute;width:0;height:0">
+  <defs>
+    <linearGradient id="brainGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#C4B5FD"/><stop offset="50%" style="stop-color:#06B6D4"/><stop offset="100%" style="stop-color:#A78BFA"/>
+    </linearGradient>
+    <linearGradient id="gptGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#10A37F"/><stop offset="100%" style="stop-color:#1A7F64"/>
+    </linearGradient>
+    <linearGradient id="geminiGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4285F4"/><stop offset="50%" style="stop-color:#EA4335"/><stop offset="100%" style="stop-color:#FBBC05"/>
+    </linearGradient>
+    <linearGradient id="claudeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#D97757"/><stop offset="100%" style="stop-color:#C4612D"/>
+    </linearGradient>
+  </defs>
+</svg>
+<div class="banner">
+<div class="nl nl-1"></div><div class="nl nl-2"></div><div class="nl nl-3"></div>
+<div class="neuron n1"></div><div class="neuron n2"></div><div class="neuron n3"></div><div class="neuron n4"></div>
+<div class="brand"><img src="/brand/logo-full-light.png" alt="Kho Mã Nguồn" width="48" height="48" style="border-radius:50%;box-shadow:0 4px 15px rgba(139,92,246,.4)"></div>
+<div class="content-left">
+  <div class="badge">
+    <svg viewBox="0 0 24 24"><path d="M21 10.12h-6.78l2.74-2.82c-2.73-2.7-7.15-2.8-9.88-.1-2.73 2.71-2.73 7.08 0 9.79s7.15 2.71 9.88 0C18.32 15.65 19 14.08 19 12.1h2c0 1.98-.88 4.55-2.64 6.29-3.51 3.48-9.21 3.48-12.72 0-3.5-3.47-3.5-9.11 0-12.58 3.51-3.47 9.14-3.49 12.65-.06L21 3v7.12zM12.5 8v4.25l3.5 2.08-.72 1.21L11 13V8h1.5z"/></svg>
+    AI Premium Accounts
+  </div>
+  <h1 class="headline"><span>TÀI KHOẢN AI</span></h1>
+  <p class="sub-headline">ChatGPT, Gemini, Claude & Nhiều Hơn</p>
+  <p class="description">Sở hữu tài khoản AI Premium với giá siêu rẻ. Kích hoạt tức thì, bảo hành trọn đời. Trải nghiệm công nghệ AI hàng đầu thế giới.</p>
+  <div class="ai-brands">
+    <div class="ai-brand-tag">
+      <svg viewBox="0 0 24 24" fill="url(#gptGrad)"><path d="M22.28 14.23a5.48 5.48 0 0 0-.47-4.53 5.55 5.55 0 0 0-5.98-2.65A5.48 5.48 0 0 0 11.69 5a5.55 5.55 0 0 0-5.29 3.84A5.48 5.48 0 0 0 2.74 12a5.55 5.55 0 0 0 .68 6.53 5.48 5.48 0 0 0 .47 4.53A5.55 5.55 0 0 0 9.87 25.7 5.48 5.48 0 0 0 14 27.76a5.55 5.55 0 0 0 5.29-3.84 5.48 5.48 0 0 0 3.66-3.16 5.55 5.55 0 0 0-.68-6.53z" transform="scale(0.75) translate(4,0)"/></svg>
+      <div><div class="name">ChatGPT Plus</div><div class="price">Từ 99K/tháng</div></div>
+    </div>
+    <div class="ai-brand-tag">
+      <svg viewBox="0 0 24 24" fill="url(#geminiGrad)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+      <div><div class="name">Gemini Pro</div><div class="price">Từ 79K/tháng</div></div>
+    </div>
+    <div class="ai-brand-tag">
+      <svg viewBox="0 0 24 24" fill="url(#claudeGrad)"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
+      <div><div class="name">Claude Pro</div><div class="price">Từ 89K/tháng</div></div>
+    </div>
+  </div>
+  <a href="#" class="cta-btn">
+    <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+    SỞ HỮU NGAY
+  </a>
+</div>
+<div class="content-right">
+  <div class="ai-brain">
+    <div class="orbit orbit-1"><div class="od od-1"></div></div>
+    <div class="orbit orbit-2"><div class="od od-2"></div><div class="od od-3"></div></div>
+    <div class="brain-core">
+      <svg viewBox="0 0 24 24"><path d="M21.33 12.91c.09 0 .09-.06.09-.09-.04-.58-.12-1.16-.24-1.72a.14.14 0 0 0-.13-.1h-2.29c-.14 0-.24-.12-.24-.26a8.22 8.22 0 0 0-.45-1.9.25.25 0 0 1 .05-.28l1.63-1.63c.06-.06.05-.14.01-.19a10 10 0 0 0-1.2-1.49.14.14 0 0 0-.18-.02l-1.63 1.63a.26.26 0 0 1-.28.05 8.22 8.22 0 0 0-1.9-.45c-.14-.01-.26-.11-.26-.24V4.02c0-.05-.04-.12-.1-.13-.56-.12-1.14-.2-1.72-.24-.03 0-.09 0-.09.09v2.29c0 .14-.11.25-.25.26a8.22 8.22 0 0 0-1.9.45.25.25 0 0 1-.28-.05L8.45 5.06a.14.14 0 0 0-.19.01 10 10 0 0 0-1.49 1.2c-.05.05-.06.12-.02.18l1.63 1.63c.08.08.1.2.05.28-.22.6-.37 1.24-.45 1.9-.01.14-.12.26-.26.26H5.43c-.05 0-.12.05-.13.1-.12.56-.2 1.14-.24 1.72 0 .03 0 .09.09.09h2.29c.14 0 .25.11.26.25.08.66.23 1.3.45 1.9.05.1.03.22-.05.28l-1.63 1.63c-.06.06-.05.14-.01.19.37.45.78.86 1.2 1.2.05.04.13.04.18-.01l1.63-1.63a.26.26 0 0 1 .28-.05c.6.22 1.24.37 1.9.45.14.01.25.12.25.26v2.29c0 .09.06.09.09.09.58-.04 1.16-.12 1.72-.24.06-.01.1-.08.1-.13v-2.29c0-.14.12-.25.26-.26.66-.08 1.3-.23 1.9-.45a.25.25 0 0 1 .28.05l1.63 1.63c.06.06.14.05.19.01.45-.37.86-.78 1.2-1.2.04-.05.04-.13-.01-.18l-1.63-1.63a.26.26 0 0 1-.05-.28c.22-.6.37-1.24.45-1.9.01-.14.12-.25.26-.25h2.29zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>
+    </div>
+  </div>
+  <div class="afc afc-1">
+    <svg viewBox="0 0 24 24" fill="#8B5CF6"><path d="M11 21h-1l1-7H7.5c-.58 0-.57-.32-.38-.66l.07-.12C8.48 10.94 10.42 7.54 13 3h1l-1 7h3.5c.49 0 .56.33.47.51l-.07.15C12.96 17.55 11 21 11 21z"/></svg>
+    <div><div class="afc-name">Kích Hoạt Ngay</div><div class="afc-desc">Tự động 24/7</div></div>
+  </div>
+  <div class="afc afc-2">
+    <svg viewBox="0 0 24 24" fill="#06B6D4"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+    <div><div class="afc-name">Bảo Hành Trọn Đời</div><div class="afc-desc">Đổi mới miễn phí</div></div>
+  </div>
+  <div class="afc afc-3">
+    <svg viewBox="0 0 24 24" fill="#F472B6"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+    <div><div class="afc-name">5000+ Đã Bán</div><div class="afc-desc">Uy tín hàng đầu</div></div>
+  </div>
+</div>
+</body>
+</html>

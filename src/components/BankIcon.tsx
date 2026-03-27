@@ -8,7 +8,12 @@ export function BankIcon({ code, name }: { code: string; name: string }) {
   const src = bankIconPath(code);
   if (broken) {
     return (
-      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-200 text-[10px] font-bold text-slate-600">
+      <span style={{
+        display: "flex", alignItems: "center", justifyContent: "center",
+        width: 40, height: 40, flexShrink: 0,
+        borderRadius: "var(--radius-lg)", background: "var(--surface-raised)",
+        fontSize: "10px", fontWeight: 700, color: "var(--text-secondary)"
+      }}>
         {code}
       </span>
     );
@@ -20,7 +25,7 @@ export function BankIcon({ code, name }: { code: string; name: string }) {
       alt={name}
       width={40}
       height={40}
-      className="h-10 w-10 shrink-0 rounded-lg object-contain"
+      style={{ width: 40, height: 40, flexShrink: 0, borderRadius: "var(--radius-lg)", objectFit: "contain" }}
       onError={() => setBroken(true)}
     />
   );

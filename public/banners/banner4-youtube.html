@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Banner - Tài Khoản Youtube | KhoMaNguon.IO.VN</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{display:flex;justify-content:center;align-items:center;min-height:100vh;background:#fff7ed;font-family:'Be Vietnam Pro',sans-serif}
+.banner{width:1200px;height:500px;background:linear-gradient(135deg,#7F1D1D 0%,#B91C1C 30%,#DC2626 60%,#EF4444 100%);border-radius:24px;position:relative;overflow:hidden;display:flex;align-items:center;box-shadow:0 20px 60px rgba(220,38,38,.3)}
+.banner::before{content:'';position:absolute;top:-100px;right:0;width:500px;height:500px;background:radial-gradient(circle,rgba(255,255,255,.08) 0%,transparent 70%);border-radius:50%}
+.pp{position:absolute;opacity:.12;animation:floatUp 8s linear infinite}
+.pp svg{width:20px;height:20px;fill:#fff}
+.pp-1{left:15%;animation-delay:0s}.pp-2{left:30%;animation-delay:2s}.pp-3{left:60%;animation-delay:4s}.pp-4{left:80%;animation-delay:1s}
+@keyframes floatUp{0%{transform:translateY(520px) rotate(0deg);opacity:0}20%{opacity:.15}80%{opacity:.1}100%{transform:translateY(-60px) rotate(360deg);opacity:0}}
+.brand{position:absolute;top:28px;right:35px;z-index:10;display:flex;align-items:center;gap:12px}
+.brand-text{color:#fff;font-size:22px;font-weight:900;text-shadow:0 2px 10px rgba(0,0,0,.3)}
+.content-left{flex:1;padding:50px 40px 50px 60px;position:relative;z-index:2}
+.badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);backdrop-filter:blur(10px);color:#FCA5A5;font-size:13px;font-weight:700;padding:6px 18px;border-radius:50px;margin-bottom:18px;letter-spacing:1px;text-transform:uppercase;border:1px solid rgba(255,255,255,.2)}
+.badge svg{width:16px;height:16px;fill:#FCA5A5}
+.headline{font-size:48px;font-weight:900;line-height:1.1;margin-bottom:8px;display:flex;align-items:center;gap:12px}
+.headline span{color:#fff;text-shadow:0 4px 20px rgba(0,0,0,.2)}
+.yt-icon{display:inline-flex;align-items:center;justify-content:center;background:#fff;width:56px;height:40px;border-radius:10px;box-shadow:0 4px 15px rgba(0,0,0,.2);flex-shrink:0}
+.yt-icon svg{width:24px;height:24px;fill:#DC2626}
+.sub-headline{font-size:22px;font-weight:600;color:rgba(255,255,255,.9);margin-bottom:6px}
+.description{font-size:15px;color:rgba(255,255,255,.75);margin-bottom:25px;line-height:1.6;max-width:440px}
+.yt-features{display:flex;gap:12px;margin-bottom:28px}
+.yt-feature{background:rgba(255,255,255,.1);backdrop-filter:blur(10px);padding:12px 16px;border-radius:14px;border:1px solid rgba(255,255,255,.15);text-align:center;min-width:110px}
+.yt-feature svg{width:28px;height:28px;fill:#fff;margin-bottom:4px}
+.yt-feature-text{color:#fff;font-size:11px;font-weight:700}
+.yt-feature-sub{color:rgba(255,255,255,.6);font-size:9px;font-weight:600;margin-top:2px}
+.cta-btn{display:inline-flex;align-items:center;gap:10px;background:#fff;color:#DC2626;font-size:18px;font-weight:800;padding:16px 40px;border-radius:60px;border:none;cursor:pointer;text-transform:uppercase;letter-spacing:1px;box-shadow:0 8px 30px rgba(0,0,0,.2);transition:all .3s;text-decoration:none}
+.cta-btn:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.3)}
+.cta-btn svg{width:20px;height:20px;fill:#DC2626}
+.content-right{flex:0 0 480px;height:100%;position:relative;z-index:2;display:flex;align-items:center;justify-content:center}
+.yt-card{width:300px;background:rgba(0,0,0,.3);backdrop-filter:blur(20px);border-radius:24px;overflow:hidden;border:1px solid rgba(255,255,255,.1);animation:cf 5s ease-in-out infinite;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+@keyframes cf{0%,100%{transform:translateY(0) rotate(2deg)}50%{transform:translateY(-15px) rotate(2deg)}}
+.yt-banner-top{height:80px;background:linear-gradient(135deg,#991B1B,#DC2626);display:flex;align-items:center;justify-content:center;position:relative}
+.yt-banner-top svg{width:40px;height:40px;fill:rgba(255,255,255,.3)}
+.yt-avatar{width:64px;height:64px;background:linear-gradient(135deg,#FBBF24,#F59E0B);border-radius:50%;border:3px solid rgba(0,0,0,.3);position:absolute;bottom:-32px;left:20px;display:flex;align-items:center;justify-content:center}
+.yt-avatar svg{width:28px;height:28px;fill:#fff}
+.yt-info{padding:40px 20px 16px}
+.yt-name{color:#fff;font-size:16px;font-weight:800}
+.yt-subs{color:rgba(255,255,255,.5);font-size:11px;font-weight:600;margin-top:2px}
+.yt-stats{display:flex;gap:8px;margin-top:12px}
+.yt-stat{flex:1;background:rgba(255,255,255,.06);border-radius:10px;padding:10px 8px;text-align:center}
+.yt-stat-num{color:#FCA5A5;font-size:14px;font-weight:800}
+.yt-stat-label{color:rgba(255,255,255,.4);font-size:8px;font-weight:600;margin-top:2px;text-transform:uppercase}
+.yt-monetize{margin:12px 20px;background:linear-gradient(135deg,rgba(34,197,94,.2),rgba(34,197,94,.1));border:1px solid rgba(34,197,94,.3);border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:8px}
+.yt-monetize svg{width:20px;height:20px;fill:#86EFAC;flex-shrink:0}
+.yt-monetize span{color:#86EFAC;font-size:11px;font-weight:700}
+.yt-vids{padding:8px 20px 20px;display:flex;gap:8px}
+.yt-vid{flex:1;height:50px;background:rgba(255,255,255,.08);border-radius:8px;display:flex;align-items:center;justify-content:center}
+.yt-vid svg{width:20px;height:20px;fill:rgba(255,255,255,.3)}
+.fc{position:absolute;background:rgba(255,255,255,.95);border-radius:14px;padding:12px 16px;display:flex;align-items:center;gap:10px;box-shadow:0 10px 40px rgba(0,0,0,.2);animation:fcf 5s ease-in-out infinite}
+.fc-1{top:60px;right:10px}.fc-2{bottom:70px;right:30px;animation-delay:2s}
+@keyframes fcf{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.fci{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.fci svg{width:18px;height:18px}
+.fci-1{background:#FEE2E2}.fci-1 svg{fill:#DC2626}
+.fci-2{background:#D1FAE5}.fci-2 svg{fill:#059669}
+.fcn{font-size:11px;font-weight:700;color:#1F2937;white-space:nowrap}
+.fcd{font-size:10px;font-weight:600;color:#DC2626}
+.fcd2{color:#059669}
+</style>
+</head>
+<body>
+<div class="banner">
+<div class="pp pp-1"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+<div class="pp pp-2"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+<div class="pp pp-3"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+<div class="pp pp-4"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div>
+<div class="brand"><img src="/brand/logo-full-light.png" alt="Kho Mã Nguồn" width="48" height="48" style="border-radius:50%;box-shadow:0 4px 15px rgba(220,38,38,.3)"></div>
+<div class="content-left">
+  <div class="badge">
+    <svg viewBox="0 0 24 24"><path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+    YouTube Premium
+  </div>
+  <h1 class="headline">
+    <div class="yt-icon"><svg viewBox="0 0 24 24"><path d="M10 15l5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"/></svg></div>
+    <span>TÀI KHOẢN YOUTUBE</span>
+  </h1>
+  <p class="sub-headline">Kênh Có Sẵn Sub - Bật Kiếm Tiền</p>
+  <p class="description">Mua bán kênh YouTube uy tín, đã bật kiếm tiền. Kênh có sẵn subscriber, video chất lượng. Hỗ trợ chuyển quyền sở hữu nhanh chóng.</p>
+  <div class="yt-features">
+    <div class="yt-feature">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+      <div class="yt-feature-text">Đã Bật Kiếm Tiền</div><div class="yt-feature-sub">Monetization ON</div>
+    </div>
+    <div class="yt-feature">
+      <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+      <div class="yt-feature-text">Có Sẵn Sub</div><div class="yt-feature-sub">1K - 100K+</div>
+    </div>
+    <div class="yt-feature">
+      <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+      <div class="yt-feature-text">Bảo Hành</div><div class="yt-feature-sub">Trọn đời 100%</div>
+    </div>
+  </div>
+  <a href="#" class="cta-btn">
+    <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+    MUA KÊNH NGAY
+  </a>
+</div>
+<div class="content-right">
+  <div class="yt-card">
+    <div class="yt-banner-top">
+      <svg viewBox="0 0 24 24"><path d="M10 15l5.19-3L10 9v6m11.56-7.83c.13.47.22 1.1.28 1.9.07.8.1 1.49.1 2.09L22 12c0 2.19-.16 3.8-.44 4.83-.25.9-.83 1.48-1.73 1.73-.47.13-1.33.22-2.65.28-1.3.07-2.49.1-3.59.1L12 19c-4.19 0-6.8-.16-7.83-.44-.9-.25-1.48-.83-1.73-1.73-.13-.47-.22-1.1-.28-1.9-.07-.8-.1-1.49-.1-2.09L2 12c0-2.19.16-3.8.44-4.83.25-.9.83-1.48 1.73-1.73.47-.13 1.33-.22 2.65-.28 1.3-.07 2.49-.1 3.59-.1L12 5c4.19 0 6.8.16 7.83.44.9.25 1.48.83 1.73 1.73z"/></svg>
+      <div class="yt-avatar"><svg viewBox="0 0 24 24"><path fill="#fff" d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z"/></svg></div>
+    </div>
+    <div class="yt-info">
+      <div class="yt-name">KhoMaNguon Channel</div>
+      <div class="yt-subs">@khomangu0n • 50.2K subscribers</div>
+      <div class="yt-stats">
+        <div class="yt-stat"><div class="yt-stat-num">50.2K</div><div class="yt-stat-label">Subscriber</div></div>
+        <div class="yt-stat"><div class="yt-stat-num">1.2M</div><div class="yt-stat-label">Views</div></div>
+        <div class="yt-stat"><div class="yt-stat-num">328</div><div class="yt-stat-label">Videos</div></div>
+      </div>
+    </div>
+    <div class="yt-monetize">
+      <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+      <span>✓ Đã Bật Kiếm Tiền - Active</span>
+    </div>
+    <div class="yt-vids">
+      <div class="yt-vid"><svg viewBox="0 0 24 24"><path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z"/></svg></div>
+      <div class="yt-vid"><svg viewBox="0 0 24 24"><path d="M17 10.5V7c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h12c.55 0 1-.45 1-1v-3.5l4 4v-11l-4 4z"/></svg></div>
+      <div class="yt-vid"><svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z"/></svg></div>
+      <div class="yt-vid"><svg viewBox="0 0 24 24"><path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14z"/></svg></div>
+    </div>
+  </div>
+  <div class="fc fc-1">
+    <div class="fci fci-1"><svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg></div>
+    <div><div class="fcn">Sub Thật 100%</div><div class="fcd">Không Drop</div></div>
+  </div>
+  <div class="fc fc-2">
+    <div class="fci fci-2"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
+    <div><div class="fcn">Chuyển Quyền 24h</div><div class="fcd2">Hỗ trợ miễn phí</div></div>
+  </div>
+</div>
+</body>
+</html>

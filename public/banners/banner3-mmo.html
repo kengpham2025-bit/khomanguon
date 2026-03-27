@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Banner - MMO | KhoMaNguon.IO.VN</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{display:flex;justify-content:center;align-items:center;min-height:100vh;background:#fff7ed;font-family:'Be Vietnam Pro',sans-serif}
+.banner{width:1200px;height:500px;background:linear-gradient(135deg,#0D4B2B 0%,#0F6B3A 30%,#10B981 60%,#34D399 100%);border-radius:24px;position:relative;overflow:hidden;display:flex;align-items:center;box-shadow:0 20px 60px rgba(16,185,129,.3)}
+.banner::before{content:'';position:absolute;top:-80px;right:50px;width:450px;height:450px;background:radial-gradient(circle,rgba(255,215,0,.15) 0%,transparent 70%);border-radius:50%}
+.grid-overlay{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:60px 60px}
+.coin{position:absolute;animation:coinFall 6s linear infinite}
+.coin svg{width:24px;height:24px;fill:rgba(255,215,0,.25)}
+.c1{left:10%;animation-delay:0s}.c2{left:25%;animation-delay:1s}.c3{left:55%;animation-delay:2s}.c4{left:70%;animation-delay:3s}.c5{left:85%;animation-delay:.5s}
+@keyframes coinFall{0%{transform:translateY(-60px) rotate(0deg);opacity:0}20%{opacity:.4}80%{opacity:.3}100%{transform:translateY(520px) rotate(360deg);opacity:0}}
+.brand{position:absolute;top:28px;right:35px;z-index:10;display:flex;align-items:center;gap:12px}
+.brand-text{color:#fff;font-size:22px;font-weight:900;text-shadow:0 2px 10px rgba(0,0,0,.3)}
+.content-left{flex:1;padding:50px 40px 50px 60px;position:relative;z-index:2}
+.badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,215,0,.2);backdrop-filter:blur(10px);color:#FDE68A;font-size:13px;font-weight:700;padding:6px 18px;border-radius:50px;margin-bottom:18px;letter-spacing:1px;text-transform:uppercase;border:1px solid rgba(255,215,0,.3)}
+.badge svg{width:16px;height:16px;fill:#FDE68A}
+.headline{font-size:54px;font-weight:900;line-height:1.1;margin-bottom:5px}
+.headline span{display:block;background:linear-gradient(135deg,#FDE68A,#FBBF24,#F59E0B);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sub-headline{font-size:26px;font-weight:700;color:#fff;margin-bottom:8px}
+.description{font-size:15px;color:rgba(255,255,255,.8);margin-bottom:28px;line-height:1.6;max-width:440px}
+.tool-tags{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:28px}
+.tool-tag{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.1);backdrop-filter:blur(10px);padding:8px 16px;border-radius:12px;color:#fff;font-size:12px;font-weight:600;border:1px solid rgba(255,255,255,.15);transition:all .3s}
+.tool-tag:hover{background:rgba(255,255,255,.18)}
+.tool-tag svg{width:16px;height:16px;fill:#fff;flex-shrink:0}
+.cta-btn{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,#F59E0B,#D97706);color:#fff;font-size:18px;font-weight:800;padding:16px 40px;border-radius:60px;border:none;cursor:pointer;text-transform:uppercase;letter-spacing:1px;box-shadow:0 8px 30px rgba(245,158,11,.4);transition:all .3s;text-decoration:none}
+.cta-btn:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(245,158,11,.6)}
+.cta-btn svg{width:20px;height:20px;fill:#fff}
+.content-right{flex:0 0 480px;height:100%;position:relative;z-index:2;display:flex;align-items:center;justify-content:center}
+.chart-container{width:300px;height:320px;background:rgba(0,0,0,.2);backdrop-filter:blur(20px);border-radius:24px;padding:20px;border:1px solid rgba(255,255,255,.1);animation:chf 5s ease-in-out infinite;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+@keyframes chf{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-15px) rotate(-3deg)}}
+.chart-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+.chart-title{color:#A7F3D0;font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px}
+.chart-title svg{width:16px;height:16px;fill:#A7F3D0}
+.chart-value{color:#FDE68A;font-size:24px;font-weight:900}
+.chart-change{color:#34D399;font-size:12px;font-weight:600;display:flex;align-items:center;gap:3px}
+.chart-change svg{width:14px;height:14px;fill:#34D399}
+.chart-bars{display:flex;align-items:flex-end;gap:8px;height:160px;padding-top:10px}
+.chart-bar{flex:1;border-radius:8px 8px 4px 4px;animation:barGrow 1.5s ease-out forwards;transform-origin:bottom}
+@keyframes barGrow{0%{transform:scaleY(0)}100%{transform:scaleY(1)}}
+.b1{height:40%;background:linear-gradient(180deg,#34D399,#059669);animation-delay:.1s}
+.b2{height:55%;background:linear-gradient(180deg,#34D399,#059669);animation-delay:.2s}
+.b3{height:45%;background:linear-gradient(180deg,#34D399,#059669);animation-delay:.3s}
+.b4{height:70%;background:linear-gradient(180deg,#FBBF24,#D97706);animation-delay:.4s}
+.b5{height:60%;background:linear-gradient(180deg,#34D399,#059669);animation-delay:.5s}
+.b6{height:85%;background:linear-gradient(180deg,#FBBF24,#D97706);animation-delay:.6s}
+.b7{height:75%;background:linear-gradient(180deg,#34D399,#059669);animation-delay:.7s}
+.b8{height:95%;background:linear-gradient(180deg,#FBBF24,#F59E0B);animation-delay:.8s;box-shadow:0 0 20px rgba(251,191,36,.3)}
+.chart-labels{display:flex;justify-content:space-between;margin-top:10px}
+.chart-label{color:rgba(167,243,208,.5);font-size:9px;font-weight:600}
+.chart-stats{display:flex;gap:12px;margin-top:15px}
+.stat-item{flex:1;background:rgba(255,255,255,.06);border-radius:10px;padding:8px 10px;text-align:center}
+.stat-num{color:#FDE68A;font-size:14px;font-weight:800}
+.stat-label{color:rgba(167,243,208,.6);font-size:8px;font-weight:600;margin-top:2px}
+.mfc{position:absolute;background:rgba(255,255,255,.95);border-radius:16px;padding:14px 18px;display:flex;align-items:center;gap:10px;box-shadow:0 10px 40px rgba(0,0,0,.15);animation:mcf 5s ease-in-out infinite}
+.mfc-1{top:50px;right:20px}.mfc-2{bottom:60px;right:40px;animation-delay:2s}
+@keyframes mcf{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.mfc-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mfc-icon svg{width:22px;height:22px;fill:#fff}
+.mfc-icon-1{background:linear-gradient(135deg,#10B981,#059669)}
+.mfc-icon-2{background:linear-gradient(135deg,#FBBF24,#D97706)}
+.mfc-name{font-size:11px;font-weight:700;color:#1F2937;white-space:nowrap}
+.mfc-desc{font-size:10px;font-weight:600;color:#10B981}
+</style>
+</head>
+<body>
+<div class="banner">
+<div class="grid-overlay"></div>
+<div class="coin c1"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.94s4.18 1.36 4.18 3.85c0 1.89-1.45 2.98-3.12 3.19z"/></svg></div>
+<div class="coin c2"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.94s4.18 1.36 4.18 3.85c0 1.89-1.45 2.98-3.12 3.19z"/></svg></div>
+<div class="coin c3"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.94s4.18 1.36 4.18 3.85c0 1.89-1.45 2.98-3.12 3.19z"/></svg></div>
+<div class="coin c4"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.94s4.18 1.36 4.18 3.85c0 1.89-1.45 2.98-3.12 3.19z"/></svg></div>
+<div class="coin c5"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.94s4.18 1.36 4.18 3.85c0 1.89-1.45 2.98-3.12 3.19z"/></svg></div>
+<div class="brand"><img src="/brand/logo-full-light.png" alt="Kho Mã Nguồn" width="48" height="48" style="border-radius:50%;box-shadow:0 4px 15px rgba(5,150,105,.4)"></div>
+<div class="content-left">
+  <div class="badge">
+    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.94s4.18 1.36 4.18 3.85c0 1.89-1.45 2.98-3.12 3.19z"/></svg>
+    Make Money Online
+  </div>
+  <h1 class="headline"><span>CÔNG CỤ MMO</span></h1>
+  <p class="sub-headline">Kiếm Tiền Online Chuyên Nghiệp</p>
+  <p class="description">Trọn bộ công cụ MMO chuyên nghiệp giúp bạn tối ưu hóa thu nhập online. Tool auto, bot, phần mềm MMO chất lượng cao với giá tốt nhất.</p>
+  <div class="tool-tags">
+    <div class="tool-tag"><svg viewBox="0 0 24 24"><path d="M17.6 11.48l1.78-3.08c.12-.21.05-.48-.16-.6s-.48-.05-.6.16l-1.8 3.12c-1.37-.63-2.91-.98-4.55-.98s-3.18.35-4.55.98L5.92 7.96c-.12-.21-.39-.28-.6-.16s-.28.39-.16.6l1.78 3.08C4.29 13.05 2.51 15.39 2 18h20c-.51-2.61-2.29-4.95-4.9-6.52z"/></svg> Tool Auto</div>
+    <div class="tool-tag"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg> Email Marketing</div>
+    <div class="tool-tag"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg> Buff Sub/Like</div>
+    <div class="tool-tag"><svg viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg> SEO Backlink</div>
+    <div class="tool-tag"><svg viewBox="0 0 24 24"><path d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z"/></svg> VPS/Proxy</div>
+  </div>
+  <a href="#" class="cta-btn">
+    <svg viewBox="0 0 24 24"><path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67z"/></svg>
+    BẮT ĐẦU NGAY
+  </a>
+</div>
+<div class="content-right">
+  <div class="chart-container">
+    <div class="chart-header">
+      <div>
+        <div class="chart-title"><svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg> Doanh Thu</div>
+        <div class="chart-value">$12,580</div>
+      </div>
+      <div class="chart-change"><svg viewBox="0 0 24 24"><path d="M7 14l5-5 5 5z"/></svg> +24.5%</div>
+    </div>
+    <div class="chart-bars">
+      <div class="chart-bar b1"></div><div class="chart-bar b2"></div><div class="chart-bar b3"></div><div class="chart-bar b4"></div>
+      <div class="chart-bar b5"></div><div class="chart-bar b6"></div><div class="chart-bar b7"></div><div class="chart-bar b8"></div>
+    </div>
+    <div class="chart-labels"><span class="chart-label">T2</span><span class="chart-label">T3</span><span class="chart-label">T4</span><span class="chart-label">T5</span><span class="chart-label">T6</span><span class="chart-label">T7</span><span class="chart-label">CN</span><span class="chart-label">T2</span></div>
+    <div class="chart-stats">
+      <div class="stat-item"><div class="stat-num">1.2K</div><div class="stat-label">ĐƠN HÀNG</div></div>
+      <div class="stat-item"><div class="stat-num">98%</div><div class="stat-label">THÀNH CÔNG</div></div>
+      <div class="stat-item"><div class="stat-num">4.9★</div><div class="stat-label">ĐÁNH GIÁ</div></div>
+    </div>
+  </div>
+  <div class="mfc mfc-1">
+    <div class="mfc-icon mfc-icon-1"><svg viewBox="0 0 24 24"><path d="M13.13 22.19l-1.63-3.83c1.57-.58 2.91-1.55 3.89-2.82l.99 4.63c.07.33-.17.64-.5.64h-1.5c-.32 0-.6-.21-.69-.52l-.56-1.1zm5.74-7.19H20c.55 0 1-.45 1-1v-2c0-.55-.45-1-1-1h-1.13c-.5-1.46-1.39-2.73-2.54-3.69L17.5 4.5c.28-.28.28-.72 0-1s-.72-.28-1 0l-1.53 1.53C14.04 4.38 13.05 4 12 4s-2.04.38-2.97 1.03L7.5 3.5c-.28-.28-.72-.28-1 0s-.28.72 0 1l1.17 1.17C6.52 6.73 5.63 8 5.13 9.46H4c-.55 0-1 .45-1 1v2c0 .55.45 1 1 1h1.13c.5 1.46 1.39 2.73 2.54 3.69L6.5 18.32c-.28.28-.28.72 0 1s.72.28 1 0l1.53-1.53c.93.65 1.92 1.03 2.97 1.03.34 0 .67-.04 1-.1l.44 2.05c.08.35.4.6.76.6h1.5c.35 0 .62-.28.62-.62 0-.05-.01-.1-.02-.15z"/></svg></div>
+    <div><div class="mfc-name">Thu Nhập Tăng 300%</div><div class="mfc-desc">Với công cụ MMO Pro</div></div>
+  </div>
+  <div class="mfc mfc-2">
+    <div class="mfc-icon mfc-icon-2"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg></div>
+    <div><div class="mfc-name">2000+ Tool Đã Bán</div><div class="mfc-desc">Khách hàng tin tưởng</div></div>
+  </div>
+</div>
+</div>
+</body>
+</html>

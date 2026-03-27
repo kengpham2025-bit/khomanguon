@@ -5,7 +5,6 @@ import { newId } from "@/lib/ids";
 import { sha256Hex } from "@/lib/hash";
 import { getSessionFromCookies } from "@/lib/session";
 import { verifyTurnstile } from "@/lib/turnstile";
-import { turnstileSecret } from "@/lib/env-edge";
 import { sendTransactionalEmail, otpWithdrawHtml } from "@/lib/email";
 
 export const runtime = "edge";
@@ -46,7 +45,7 @@ export async function POST(req: Request) {
     if (!parsed.success) return NextResponse.json({ error: "Dữ liệu không hợp lệ" }, { status: 400 });
 
     const ip = req.headers.get("cf-connecting-ip") || req.headers.get("x-forwarded-for") || undefined;
-    const captchaOk = await verifyTurnstile(turnstileSecret(), parsed.data.turnstileToken, ip);
+    const captchaOk = await verifyTurnstile(undefined, parsed.data.turnstileToken, ip);
     if (!captchaOk) {
       return NextResponse.json({ error: "Captcha không hợp lệ" }, { status: 400 });
     }

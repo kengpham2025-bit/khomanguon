@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Logo - Kho Mã Nguồn | KhoMaNguon.IO.VN</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  background:#0d3d45;
+  font-family:'Be Vietnam Pro',sans-serif;
+  overflow:hidden;
+}
+
+.logo-wrap{
+  position:relative;
+  width:600px;
+  height:480px;
+  background:linear-gradient(145deg,#0d3d45 0%,#0a2e35 40%,#0d3d45 70%,#0a2e35 100%);
+  border-radius:28px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:32px;
+  overflow:hidden;
+  box-shadow:
+    0 0 0 1px rgba(16,185,129,0.12),
+    0 40px 80px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+/* ── Ambient glow ── */
+.glow-teal{
+  position:absolute;
+  width:360px;height:360px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(16,185,129,0.18) 0%,transparent 70%);
+  top:50%;left:50%;
+  transform:translate(-50%,-60%);
+  animation:glowPulse 4s ease-in-out infinite;
+  pointer-events:none;
+}
+.glow-amber{
+  position:absolute;
+  width:240px;height:240px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(245,158,11,0.12) 0%,transparent 70%);
+  bottom:40px;right:40px;
+  animation:glowPulse 6s ease-in-out infinite reverse;
+  pointer-events:none;
+}
+@keyframes glowPulse{
+  0%,100%{opacity:0.6;transform:translate(-50%,-60%) scale(1)}
+  50%{opacity:1;transform:translate(-50%,-60%) scale(1.15)}
+}
+
+/* ── Grid lines (subtle) ── */
+.grid-lines{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(16,185,129,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(16,185,129,0.04) 1px,transparent 1px);
+  background-size:40px 40px;
+  pointer-events:none;
+}
+
+/* ── Mark container ── */
+.mark-wrap{
+  position:relative;
+  width:120px;height:120px;
+  display:flex;align-items:center;justify-content:center;
+  z-index:2;
+}
+
+/* Outer ring */
+.mark-ring{
+  position:absolute;inset:0;
+  border-radius:30px;
+  border:1.5px solid rgba(16,185,129,0.3);
+  animation:ringSpin 8s linear infinite;
+}
+@keyframes ringSpin{
+  0%{transform:rotate(0deg);border-color:rgba(16,185,129,0.3)}
+  50%{border-color:rgba(245,158,11,0.25)}
+  100%{transform:rotate(360deg);border-color:rgba(16,185,129,0.3)}
+}
+
+/* Glow behind mark */
+.mark-glow{
+  position:absolute;
+  width:90px;height:90px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(16,185,129,0.35) 0%,rgba(16,185,129,0.08) 60%,transparent 100%);
+  animation:glowMark 3s ease-in-out infinite;
+}
+@keyframes glowMark{
+  0%,100%{transform:scale(1);opacity:0.8}
+  50%{transform:scale(1.2);opacity:1}
+}
+
+/* Main icon bg */
+.mark-bg{
+  position:absolute;
+  width:88px;height:88px;
+  border-radius:22px;
+  background:linear-gradient(135deg,#0d3d45 0%,#0f4c5c 100%);
+  box-shadow:
+    0 8px 32px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+/* Code brackets SVG */
+.mark-svg{
+  position:relative;z-index:2;
+  width:88px;height:88px;
+  animation:markFloat 4s ease-in-out infinite;
+}
+@keyframes markFloat{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-6px)}
+}
+
+/* Dot accent */
+.mark-dot{
+  position:absolute;
+  width:8px;height:8px;
+  border-radius:50%;
+  background:#10b981;
+  box-shadow:0 0 8px rgba(16,185,129,0.8);
+  animation:dotBlink 2s ease-in-out infinite;
+}
+.mark-dot.top-right{top:10px;right:10px;animation-delay:0s}
+.mark-dot.bottom-left{bottom:10px;left:10px;animation-delay:1s}
+@keyframes dotBlink{
+  0%,100%{opacity:1;transform:scale(1)}
+  50%{opacity:0.4;transform:scale(0.7)}
+}
+
+/* ── Text ── */
+.text-wrap{
+  text-align:center;
+  z-index:2;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+}
+
+.brand-name{
+  font-size:42px;
+  font-weight:900;
+  letter-spacing:-0.5px;
+  line-height:1;
+  background:linear-gradient(135deg,#ffffff 0%,#d1fae5 40%,#10b981 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  animation:textReveal 1.2s ease forwards;
+  opacity:0;
+  filter:drop-shadow(0 2px 12px rgba(16,185,129,0.3));
+}
+@keyframes textReveal{
+  0%{opacity:0;transform:translateY(12px);filter:blur(4px)}
+  100%{opacity:1;transform:translateY(0);filter:blur(0)}
+}
+
+.brand-sub{
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  color:rgba(245,158,11,0.85);
+  animation:textReveal 1.2s 0.4s ease forwards;
+  opacity:0;
+}
+@keyframes textReveal2{
+  0%{opacity:0;transform:translateY(8px)}
+  100%{opacity:1;transform:translateY(0)}
+}
+
+.tagline{
+  font-size:15px;
+  font-weight:500;
+  color:rgba(255,255,255,0.45);
+  letter-spacing:0.5px;
+  animation:textReveal 1.2s 0.7s ease forwards;
+  opacity:0;
+}
+
+/* ── Floating particles ── */
+.particle{
+  position:absolute;
+  font-size:13px;
+  color:rgba(16,185,129,0.35);
+  font-weight:700;
+  font-family:'Be Vietnam Pro',monospace;
+  animation:particleFloat 6s ease-in-out infinite;
+  pointer-events:none;
+  user-select:none;
+  white-space:nowrap;
+}
+.particle:nth-child(1){top:40px;left:50px;animation-delay:0s;animation-duration:7s;font-size:11px}
+.particle:nth-child(2){top:70px;right:55px;animation-delay:1.2s;animation-duration:5s;font-size:14px}
+.particle:nth-child(3){bottom:80px;left:70px;animation-delay:0.6s;animation-duration:8s;font-size:12px;color:rgba(245,158,11,0.3)}
+.particle:nth-child(4){bottom:60px;right:60px;animation-delay:2s;animation-duration:6s;font-size:10px}
+.particle:nth-child(5){top:50%;left:30px;animation-delay:3s;animation-duration:9s;font-size:11px;color:rgba(16,185,129,0.2)}
+.particle:nth-child(6){top:45%;right:28px;animation-delay:4.5s;animation-duration:7s;font-size:13px}
+@keyframes particleFloat{
+  0%,100%{transform:translateY(0) rotate(0deg);opacity:0.4}
+  25%{transform:translateY(-12px) rotate(3deg);opacity:0.7}
+  75%{transform:translateY(8px) rotate(-2deg);opacity:0.3}
+}
+
+/* ── Corner accent ── */
+.corner-tl{
+  position:absolute;top:0;left:0;
+  width:80px;height:80px;
+  border-top:2px solid rgba(16,185,129,0.25);
+  border-left:2px solid rgba(16,185,129,0.25);
+  border-top-left-radius:28px;
+  pointer-events:none;
+}
+.corner-br{
+  position:absolute;bottom:0;right:0;
+  width:80px;height:80px;
+  border-bottom:2px solid rgba(245,158,11,0.2);
+  border-right:2px solid rgba(245,158,11,0.2);
+  border-bottom-right-radius:28px;
+  pointer-events:none;
+}
+
+/* ── Bottom bar ── */
+.bottom-bar{
+  position:absolute;bottom:28px;
+  display:flex;align-items:center;gap:10px;
+  animation:textReveal 1.2s 1s ease forwards;
+  opacity:0;
+}
+.bottom-bar-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:#10b981;
+  animation:dotBlink 1.5s ease-in-out infinite;
+}
+.bottom-bar-text{
+  font-size:11px;font-weight:600;
+  letter-spacing:2px;text-transform:uppercase;
+  color:rgba(255,255,255,0.3);
+}
+</style>
+</head>
+<body>
+
+<div class="logo-wrap">
+
+  <!-- Background elements -->
+  <div class="grid-lines"></div>
+  <div class="glow-teal"></div>
+  <div class="glow-amber"></div>
+  <div class="corner-tl"></div>
+  <div class="corner-br"></div>
+
+  <!-- Floating code particles -->
+  <div class="particle">&lt;div&gt;</div>
+  <div class="particle">&lt;/&gt;</div>
+  <div class="particle">npm install</div>
+  <div class="particle">export</div>
+  <div class="particle">async</div>
+  <div class="particle">import</div>
+
+  <!-- Mark / Icon -->
+  <div class="mark-wrap">
+    <div class="mark-ring"></div>
+    <div class="mark-glow"></div>
+    <div class="mark-bg"></div>
+
+    <!-- Code brackets SVG — matching brand mark -->
+    <svg class="mark-svg" viewBox="0 0 88 88" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Left bracket -->
+      <path d="M38 24 L26 44 L38 64" stroke="white" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <!-- Center line -->
+      <line x1="50" y1="24" x2="50" y2="64" stroke="white" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
+      <!-- Right bracket -->
+      <path d="M62 24 L74 44 L62 64" stroke="white" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <!-- Accent dot on right -->
+      <circle cx="78" cy="24" r="3.5" fill="#10b981" opacity="0.9"/>
+    </svg>
+
+    <div class="mark-dot top-right"></div>
+    <div class="mark-dot bottom-left"></div>
+  </div>
+
+  <!-- Text -->
+  <div class="text-wrap">
+    <div class="brand-name">Kho Mã Nguồn</div>
+    <div class="brand-sub">Code Marketplace</div>
+    <div class="tagline">Mã nguồn · Tài khoản · Dịch vụ AI</div>
+  </div>
+
+  <!-- Bottom status bar -->
+  <div class="bottom-bar">
+    <div class="bottom-bar-dot"></div>
+    <span class="bottom-bar-text">KhoMaNguon.IO.VN</span>
+  </div>
+
+</div>
+
+</body>
+</html>

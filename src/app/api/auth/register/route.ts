@@ -5,8 +5,7 @@ import { getDb } from "@/lib/db";
 import { newId } from "@/lib/ids";
 import { sha256Hex } from "@/lib/hash";
 import { verifyTurnstile } from "@/lib/turnstile";
-import { turnstileSecret } from "@/lib/env-edge";
-import { sendTransactionalEmail, verificationEmailHtml } from "@/lib/email";
+import { sendTransactionalEmail, verificationEmailHtml, getAppUrl } from "@/lib/email";
 
 export const runtime = "edge";
 
@@ -28,7 +27,7 @@ export async function POST(req: Request) {
     const { email, password, name, phone, turnstileToken } = parsed.data;
 
     const ip = req.headers.get("cf-connecting-ip") || req.headers.get("x-forwarded-for") || undefined;
-    const ok = await verifyTurnstile(turnstileSecret(), turnstileToken, ip);
+    const ok = await verifyTurnstile(undefined, turnstileToken, ip);
     if (!ok) {
       return NextResponse.json({ error: "Xác minh Captcha thất bại" }, { status: 400 });
     }
@@ -63,10 +62,11 @@ export async function POST(req: Request) {
       .bind(tokenId, userId, tokenHash, exp, now)
       .run();
 
+    const appUrl = await getAppUrl();
     await sendTransactionalEmail({
       to: email,
       subject: "Xác nhận email — Kho Mã Nguồn",
-      html: verificationEmailHtml(rawToken),
+      html: verificationEmailHtml(rawToken, appUrl),
     });
 
     return NextResponse.json({ ok: true, message: "Đã gửi email xác nhận. Vui lòng kiểm tra hộp thư." });

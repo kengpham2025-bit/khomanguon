@@ -13,9 +13,7 @@ export default function AdminKycPage() {
     if (r.ok) setList(d.users || []);
   }
 
-  useEffect(() => {
-    refresh();
-  }, []);
+  useEffect(() => { refresh(); }, []);
 
   async function setStatus(userId: string, status: "verified" | "rejected" | "none") {
     await fetch("/api/admin/kyc", {
@@ -28,36 +26,24 @@ export default function AdminKycPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold">KYC</h1>
-      <ul className="mt-8 space-y-4">
+      <h1 className="page-title">KYC</h1>
+      <div className="admin-list" style={{ marginTop: "var(--space-8)" }}>
         {list.map((u) => (
-          <li key={u.id} className="rounded-2xl border border-slate-100 bg-white p-4">
-            <p className="font-medium">
-              {u.name} — {u.email}
+          <div key={u.id} className="admin-card" style={{ padding: "var(--space-4)" }}>
+            <p style={{ fontWeight: 500 }}>{u.name} — {u.email}</p>
+            <p style={{ fontSize: "0.875rem", color: "var(--text-secondary)", marginTop: "var(--space-1)" }}>
+              Trạng thái: <span className={`badge ${u.kyc_status === "pending" ? "badge-warning" : u.kyc_status === "verified" ? "badge-success" : "badge-neutral"}`}>{u.kyc_status}</span>
             </p>
-            <p className="text-sm text-slate-600">Trạng thái: {u.kyc_status}</p>
             {u.kyc_status === "pending" ? (
-              <div className="mt-3 flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  className="rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white"
-                  onClick={() => setStatus(u.id, "verified")}
-                >
-                  Duyệt (tích xanh)
-                </button>
-                <button
-                  type="button"
-                  className="rounded-full border border-red-200 px-4 py-2 text-sm text-red-700"
-                  onClick={() => setStatus(u.id, "rejected")}
-                >
-                  Từ chối
-                </button>
+              <div className="flex flex-wrap gap-2" style={{ marginTop: "var(--space-3)" }}>
+                <button type="button" className="btn btn-primary btn-sm" onClick={() => setStatus(u.id, "verified")}>Duyệt (tích xanh)</button>
+                <button type="button" className="btn btn-outline btn-sm" style={{ color: "var(--error)", borderColor: "#fecaca" }} onClick={() => setStatus(u.id, "rejected")}>Từ chối</button>
               </div>
             ) : null}
-          </li>
+          </div>
         ))}
-        {list.length === 0 ? <p className="text-slate-500">Chưa có hồ sơ.</p> : null}
-      </ul>
+        {list.length === 0 ? <p style={{ color: "var(--text-muted)" }}>Chưa có hồ sơ.</p> : null}
+      </div>
     </div>
   );
 }

@@ -1,11 +1,11 @@
-name = "khomanguonnew"
+name = "khomanguon"
 compatibility_date = "2024-09-23"
 compatibility_flags = ["nodejs_compat"]
 pages_build_output_dir = ".open-next/cloudflare"
 
 [[d1_databases]]
 binding = "DB"
-database_name = "khomanguonnew"
+database_name = "khomanguon"
 database_id = "a68e1aec-8fff-4a5f-a1cd-9a54d9623dd2"
 
 # ===== PayOS Environment Variables =====

@@ -5,7 +5,7 @@
  * SDK:  @payos/node
  */
 import { PayOS } from "@payos/node";
-import { getOptionalRequestContext } from "@cloudflare/next-on-pages";
+import { getOptionalCloudflareContext } from "./cloudflare-context";
 
 export interface PayOSEnv {
   clientId: string;
@@ -18,7 +18,7 @@ let _payos: PayOS | null = null;
 export function getPayOS(): PayOS {
   if (_payos) return _payos;
 
-  const ctx = getOptionalRequestContext();
+  const ctx = getOptionalCloudflareContext();
   const env = ctx?.env;
 
   const clientId =

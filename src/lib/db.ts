@@ -1,12 +1,12 @@
 import type { D1Database } from "@cloudflare/workers-types";
-import { getOptionalRequestContext } from "@cloudflare/next-on-pages";
+import { getOptionalCloudflareContext } from "./cloudflare-context";
 
 export function getDb(): D1Database {
-  const ctx = getOptionalRequestContext();
+  const ctx = getOptionalCloudflareContext();
   const db = ctx?.env?.DB as D1Database | undefined;
   if (!db) {
     throw new Error(
-      "D1 không khả dụng. Deploy lên Cloudflare Pages hoặc chạy `npm run pages:build` rồi `wrangler pages dev .vercel/output/static --d1 DB=khomanguonnew`.",
+      "D1 không khả dụng. Deploy lên Cloudflare hoặc chạy `npm run pages:preview` / `wrangler pages dev` với binding DB.",
     );
   }
   return db;

@@ -1,11 +1,9 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getDb } from "@/lib/db";
 import { newId } from "@/lib/ids";
 import { slugify } from "@/lib/slug";
 import { getSessionFromCookies } from "@/lib/session";
-
-export const runtime = "edge";
 
 async function requireApprovedSeller() {
   const s = await getSessionFromCookies();

@@ -1,12 +1,10 @@
-/**
+﻿/**
  * GET  /api/admin/settings          — lấy toàn bộ settings (grouped, admin only)
  * POST /api/admin/settings/seed       — seed default values (nếu chưa có)
  */
 import { NextResponse } from "next/server";
 import { getSessionFromCookies } from "@/lib/session";
 import { getSettingsGrouped, seedSettings } from "@/lib/settings";
-
-export const runtime = "edge";
 
 export async function GET() {
   const session = await getSessionFromCookies();

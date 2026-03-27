@@ -1,8 +1,6 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { getSessionFromCookies } from "@/lib/session";
-
-export const runtime = "edge";
 
 export async function GET() {
   const session = await getSessionFromCookies();

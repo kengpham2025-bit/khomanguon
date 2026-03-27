@@ -1,10 +1,8 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getDb } from "@/lib/db";
 import { newId } from "@/lib/ids";
 import { getSessionFromCookies } from "@/lib/session";
-
-export const runtime = "edge";
 
 const schema = z.object({ message: z.string().max(2000).optional() });
 

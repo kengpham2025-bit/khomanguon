@@ -1,8 +1,6 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { sha256Hex } from "@/lib/hash";
-
-export const runtime = "edge";
 
 export async function POST(req: Request) {
   try {

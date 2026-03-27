@@ -1,10 +1,8 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getDb } from "@/lib/db";
 import { sha256Hex } from "@/lib/hash";
 import { getSessionFromCookies } from "@/lib/session";
-
-export const runtime = "edge";
 
 const schema = z.object({
   withdrawalId: z.string().uuid(),

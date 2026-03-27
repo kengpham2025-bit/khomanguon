@@ -1,9 +1,7 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getDb } from "@/lib/db";
 import { getSessionFromCookies } from "@/lib/session";
-
-export const runtime = "edge";
 
 async function requireAdmin() {
   const s = await getSessionFromCookies();

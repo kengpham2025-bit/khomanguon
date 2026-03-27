@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { hashPassword } from "@/lib/password";
 import { z } from "zod";
 import { getDb } from "@/lib/db";
@@ -6,8 +6,6 @@ import { newId } from "@/lib/ids";
 import { sha256Hex } from "@/lib/hash";
 import { verifyTurnstile } from "@/lib/turnstile";
 import { sendTransactionalEmail, verificationEmailHtml, getAppUrl } from "@/lib/email";
-
-export const runtime = "edge";
 
 const bodySchema = z.object({
   email: z.string().email(),

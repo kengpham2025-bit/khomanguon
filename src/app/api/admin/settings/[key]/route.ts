@@ -8,8 +8,6 @@ import { getSessionFromCookies } from "@/lib/session";
 import { upsertSetting, invalidateCache } from "@/lib/settings";
 import type { SettingType } from "@/lib/settings";
 
-export const runtime = "edge";
-
 const schema = z.object({
   value: z.string(),
   type: z.enum(["string", "number", "boolean", "json"]).optional(),

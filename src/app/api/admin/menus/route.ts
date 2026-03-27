@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getDb } from "@/lib/db";
 import { newId } from "@/lib/ids";
@@ -15,8 +15,6 @@ function normalizeMenuHref(h: string): string {
 function menuHrefForbidden(href: string): boolean {
   return EXCLUDED_MENU_HREFS.has(normalizeMenuHref(href));
 }
-
-export const runtime = "edge";
 
 async function requireAdmin() {
   const s = await getSessionFromCookies();

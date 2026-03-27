@@ -1,9 +1,7 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { sha256Hex } from "@/lib/hash";
 import { sendTransactionalEmail, forgotPasswordHtml, getAppUrl } from "@/lib/email";
-
-export const runtime = "edge";
 
 function generateOTP(): string {
   const arr = new Uint8Array(6);

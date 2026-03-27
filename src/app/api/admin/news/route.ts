@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getDb } from "@/lib/db";
 import { newId } from "@/lib/ids";
@@ -7,8 +7,6 @@ import { slugify } from "@/lib/slug";
 import { crawlArticleFromUrl } from "@/lib/crawl-article";
 import { rewriteArticleWithGroq } from "@/lib/groq-rewrite";
 import { getSetting } from "@/lib/settings";
-
-export const runtime = "edge";
 
 async function requireAdmin() {
   const s = await getSessionFromCookies();

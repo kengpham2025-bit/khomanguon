@@ -3,8 +3,6 @@ import { z } from "zod";
 import { getDb } from "@/lib/db";
 import { getSessionFromCookies } from "@/lib/session";
 
-export const runtime = "edge";
-
 async function requireAdmin() {
   const s = await getSessionFromCookies();
   if (!s || s.role !== "admin") return null;

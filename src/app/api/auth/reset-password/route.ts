@@ -1,10 +1,8 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getDb } from "@/lib/db";
 import { sha256Hex } from "@/lib/hash";
 import { hashPassword } from "@/lib/password";
-
-export const runtime = "edge";
 
 const ResetSchema = z.object({
   email: z.string().email("Email không hợp lệ"),

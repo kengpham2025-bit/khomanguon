@@ -1,11 +1,9 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getDb } from "@/lib/db";
 import { newId } from "@/lib/ids";
 import { getSessionFromCookies } from "@/lib/session";
 import { VN_BANKS } from "@/lib/vn-banks";
-
-export const runtime = "edge";
 
 async function requireWithdrawSeller() {
   const s = await getSessionFromCookies();

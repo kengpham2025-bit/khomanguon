@@ -1,11 +1,9 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { verifyPassword } from "@/lib/password";
 import { z } from "zod";
 import { getDb } from "@/lib/db";
 import { verifyTurnstile } from "@/lib/turnstile";
 import { SESSION_COOKIE_NAME, sessionCookieOptions, signSession } from "@/lib/auth";
-
-export const runtime = "edge";
 
 const bodySchema = z.object({
   email: z.string().email(),

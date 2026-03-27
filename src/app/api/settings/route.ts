@@ -1,11 +1,9 @@
-/**
+﻿/**
  * GET /api/settings — settings công khai cho client (public keys)
  * Chỉ trả về các key KHÔNG có is_secret.
  */
 import { NextResponse } from "next/server";
 import { getAllSettings } from "@/lib/settings";
-
-export const runtime = "edge";
 
 export async function GET() {
   try {

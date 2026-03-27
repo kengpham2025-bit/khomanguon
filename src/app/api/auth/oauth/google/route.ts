@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { newId } from "@/lib/ids";
 import { SESSION_COOKIE_NAME, sessionCookieOptions, signSession } from "@/lib/auth";
@@ -8,8 +8,6 @@ import {
   googleClientSecret,
   exchangeGoogleCode,
 } from "@/lib/oauth";
-
-export const runtime = "edge";
 
 export async function GET(req: Request) {
   const url = new URL(req.url);

@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 
-export const runtime = "edge";
-
 type Ctx = { params: Promise<{ slug: string }> };
 
 export async function GET(_req: Request, ctx: Ctx) {

@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+﻿import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getDb } from "@/lib/db";
 import { newId } from "@/lib/ids";
@@ -6,8 +6,6 @@ import { sha256Hex } from "@/lib/hash";
 import { getSessionFromCookies } from "@/lib/session";
 import { verifyTurnstile } from "@/lib/turnstile";
 import { sendTransactionalEmail, otpWithdrawHtml } from "@/lib/email";
-
-export const runtime = "edge";
 
 async function requireWithdrawSeller() {
   const s = await getSessionFromCookies();

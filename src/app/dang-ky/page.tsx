@@ -3,13 +3,13 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { Turnstile } from "@marsidev/react-turnstile";
 import { IconChevronLeft } from "@/components/Icons";
 import { SiteLogo } from "@/components/SiteLogo";
 import { LoadingOverlay } from "@/components/ui/LoadingOverlay";
 import { BottomWaves } from "@/components/Waves";
 import { notifyError, notifySuccess } from "@/lib/notify";
 import { useAuthModal } from "@/components/AuthModal";
+import { CaptchaInput } from "@/components/CaptchaInput";
 
 type OauthConfig = { google: boolean; facebook: boolean };
 
@@ -21,41 +21,29 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [agree, setAgree] = useState(false);
-  const [token, setToken] = useState("");
+  const [captchaToken, setCaptchaToken] = useState("");
   const [err, setErr] = useState("");
   const [okMsg, setOkMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const [oauthConfig, setOauthConfig] = useState<OauthConfig>({ google: false, facebook: false });
-  const [siteKey, setSiteKey] = useState("");
 
   useEffect(() => {
     fetch("/api/auth/oauth/config")
       .then((r) => r.json() as Promise<OauthConfig>)
       .then(setOauthConfig)
       .catch(() => {});
-    fetch("/api/settings")
-      .then((r) => r.json() as Promise<{ settings?: Record<string, string> }>)
-      .then((d) => setSiteKey(d.settings?.turnstile_site_key ?? ""))
-      .catch(() => {});
   }, []);
 
   const canSubmit = useMemo(() => {
-    const captchaOk = siteKey ? Boolean(token) : false;
-    return name.length >= 2 && email.includes("@") && password.length >= 8 && agree && captchaOk;
-  }, [name, email, password, agree, token, siteKey]);
+    return name.length >= 2 && email.includes("@") && password.length >= 8 && agree && Boolean(captchaToken);
+  }, [name, email, password, agree, captchaToken]);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setErr("");
     setOkMsg("");
-    if (!siteKey) {
-      const m = "Biểu mẫu bảo vệ chưa sẵn sàng. Vui lòng thử lại sau hoặc liên hệ hỗ trợ.";
-      setErr(m);
-      notifyError(m);
-      return;
-    }
-    if (!token) {
-      const m = "Vui lòng hoàn thành Captcha";
+    if (!captchaToken) {
+      const m = "Vui lòng hoàn thành mã bảo vệ";
       setErr(m);
       notifyError(m);
       return;
@@ -76,7 +64,7 @@ export default function RegisterPage() {
           email,
           password,
           phone: phone || undefined,
-          turnstileToken: token,
+          captchaToken,
         }),
       });
       const data = (await res.json()) as { error?: string; message?: string; ok?: boolean };
@@ -135,6 +123,8 @@ export default function RegisterPage() {
             <input className="input" type="email" placeholder="Email đăng nhập" value={email} onChange={(e) => setEmail(e.target.value)} required />
             <input className="input" type="password" placeholder="Mật khẩu (tối thiểu 8 ký tự)" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={8} />
 
+            <CaptchaInput onVerify={setCaptchaToken} disabled={loading} />
+
             <label className="checkbox-wrap">
               <input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} />
               <span>
@@ -142,16 +132,6 @@ export default function RegisterPage() {
                 <span style={{ fontWeight: 500, color: "var(--brand-blue)" }}>Chính sách bảo vệ dữ liệu &amp; Quy định sử dụng</span> của Kho Mã Nguồn.
               </span>
             </label>
-
-            <div className="flex justify-center" style={{ padding: "var(--space-1) 0" }}>
-              {siteKey ? (
-                <Turnstile siteKey={siteKey} onSuccess={setToken} onExpire={() => setToken("")} />
-              ) : (
-                <p style={{ textAlign: "center", fontSize: "0.75rem", color: "var(--warning-text)" }}>
-                  Ô xác minh an toàn chưa hiển thị. Tải lại trang hoặc thử trình duyệt khác.
-                </p>
-              )}
-            </div>
 
             <button type="submit" disabled={!canSubmit || loading} className="pill-btn-primary">
               {loading ? "Đang gửi…" : "Hoàn tất đăng ký"}

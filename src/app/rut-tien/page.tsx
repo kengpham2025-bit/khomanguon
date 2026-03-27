@@ -3,14 +3,14 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Turnstile } from "@marsidev/react-turnstile";
-import { IconArrowLeft, IconWallet, IconShieldCheck, IconPlus, IconAlertCircle, IconCheckCircle, IconMail } from "@/components/Icons";
+import { IconArrowLeft, IconWallet, IconPlus, IconAlertCircle, IconCheckCircle, IconMail } from "@/components/Icons";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { LoadingOverlay } from "@/components/ui/LoadingOverlay";
 import { BankIcon } from "@/components/BankIcon";
 import { VN_BANKS } from "@/lib/vn-banks";
 import { useAuthModal } from "@/components/AuthModal";
+import { CaptchaInput } from "@/components/CaptchaInput";
 
 type Account = { id: string; bank_code: string; account_number: string; account_name: string };
 
@@ -26,10 +26,9 @@ export default function WithdrawPage() {
   const [amount, setAmount] = useState("");
   const [otp, setOtp] = useState("");
   const [wid, setWid] = useState<string | null>(null);
-  const [token, setToken] = useState("");
+  const [captchaToken, setCaptchaToken] = useState("");
   const [msg, setMsg] = useState("");
   const [err, setErr] = useState("");
-  const [turnstileKey, setTurnstileKey] = useState("");
   const [addLoading, setAddLoading] = useState(false);
   const [otpLoading, setOtpLoading] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
@@ -43,13 +42,7 @@ export default function WithdrawPage() {
     if (b.accounts) { setAccounts(b.accounts); setBanks(b.banks || VN_BANKS); }
   }
 
-  useEffect(() => {
-    load();
-    fetch("/api/settings")
-      .then((r) => r.json() as Promise<{ settings?: Record<string, string> }>)
-      .then((d) => setTurnstileKey(d.settings?.turnstile_site_key ?? ""))
-      .catch(() => {});
-  }, []);
+  useEffect(() => { void load(); }, []);
 
   async function addBank(e: React.FormEvent) {
     e.preventDefault();
@@ -59,21 +52,22 @@ export default function WithdrawPage() {
     const d = (await res.json()) as { error?: string };
     setAddLoading(false);
     if (!res.ok) { setErr(d.error || "Lỗi"); return; }
-    setBankCode(""); setAccNum(""); setAccName(""); load();
+    setBankCode(""); setAccNum(""); setAccName(""); void load();
   }
 
   async function requestOtp(e: React.FormEvent) {
     e.preventDefault();
     setErr(""); setMsg("");
-    if (!turnstileKey || !token) { setErr("Cần Captcha"); return; }
+    if (!captchaToken) { setErr("Vui lòng hoàn thành mã bảo vệ"); return; }
     const vnd = Number(String(amount).replace(/\D/g, ""));
     if (!selId || !vnd) { setErr("Chọn TK ngân hàng và nhập số tiền"); return; }
     setOtpLoading(true);
-    const res = await fetch("/api/withdraw/request", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ bankAccountId: selId, amountVnd: vnd, turnstileToken: token }) });
+    const res = await fetch("/api/withdraw/request", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ bankAccountId: selId, amountVnd: vnd, captchaToken }) });
     const d = (await res.json()) as { error?: string; message?: string; withdrawalId?: string };
     setOtpLoading(false);
-    if (!res.ok) { setErr(d.error || "Lỗi"); return; }
+    if (!res.ok) { setErr(d.error || "Lỗi"); void load(); return; }
     setWid(d.withdrawalId ?? null);
+    setCaptchaToken("");
     setMsg(d.message || "Đã gửi OTP.");
   }
 
@@ -150,8 +144,8 @@ export default function WithdrawPage() {
               {accounts.map((a) => (<option key={a.id} value={a.id}>{a.bank_code} — {a.account_number} — {a.account_name}</option>))}
             </select>
             <input className="input" placeholder="Số tiền (VND)" value={amount} onChange={(e) => setAmount(e.target.value)} />
-            {turnstileKey ? (<div className="flex justify-center"><Turnstile siteKey={turnstileKey} onSuccess={setToken} onExpire={() => setToken("")} /></div>) : null}
-            <button type="submit" disabled={otpLoading} className="btn btn-primary w-full"><IconMail size={16} /> Gửi OTP email</button>
+            <CaptchaInput onVerify={setCaptchaToken} disabled={otpLoading} />
+            <button type="submit" disabled={otpLoading || !captchaToken} className="btn btn-primary w-full"><IconMail size={16} /> Gửi OTP email</button>
           </form>
           {wid ? (
             <form onSubmit={confirmOtp} className="form-space" style={{ marginTop: "var(--space-6)", borderTop: "1px solid var(--border-light)", paddingTop: "var(--space-6)" }}>

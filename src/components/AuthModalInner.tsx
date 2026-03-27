@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { Turnstile } from "@marsidev/react-turnstile";
+import { CaptchaInput } from "@/components/CaptchaInput";
 import { SiteLogo } from "@/components/SiteLogo";
 import { notifyError, notifySuccess } from "@/lib/notify";
 
@@ -14,7 +14,6 @@ export function AuthModalInner({ defaultMode, onClose }: { defaultMode: Mode; on
   const router = useRouter();
   const [mode, setMode] = useState<Mode>(defaultMode === "forgot" ? "login" : defaultMode);
   const [oauthConfig, setOauthConfig] = useState<OauthConfig>({ google: false, facebook: false });
-  const [turnstileKey, setTurnstileKey] = useState("");
 
   // Login fields
   const [email, setEmail] = useState("");
@@ -22,7 +21,7 @@ export function AuthModalInner({ defaultMode, onClose }: { defaultMode: Mode; on
   const [showPwd, setShowPwd] = useState(false);
   const [loginErr, setLoginErr] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
-  const [turnstileToken, setTurnstileToken] = useState("");
+  const [captchaToken, setCaptchaToken] = useState("");
 
   // Register fields
   const [regName, setRegName] = useState("");
@@ -48,13 +47,13 @@ export function AuthModalInner({ defaultMode, onClose }: { defaultMode: Mode; on
   const backdropRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    setCaptchaToken("");
+  }, [mode]);
+
+  useEffect(() => {
     fetch("/api/auth/oauth/config")
       .then((r) => r.json() as Promise<OauthConfig>)
       .then(setOauthConfig)
-      .catch(() => {});
-    fetch("/api/settings")
-      .then((r) => r.json() as Promise<{ settings?: Record<string, string> }>)
-      .then((d) => setTurnstileKey(d.settings?.turnstile_site_key ?? ""))
       .catch(() => {});
   }, []);
 
@@ -81,13 +80,16 @@ export function AuthModalInner({ defaultMode, onClose }: { defaultMode: Mode; on
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
     setLoginErr("");
-    if (!turnstileToken) { setLoginErr("Vui lòng hoàn thành Captcha"); return; }
+    if (!captchaToken) {
+      setLoginErr("Vui lòng hoàn thành mã bảo vệ");
+      return;
+    }
     setLoginLoading(true);
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, turnstileToken }),
+        body: JSON.stringify({ email, password, captchaToken }),
       });
       const data = (await res.json()) as { error?: string; ok?: boolean };
       if (!res.ok) {
@@ -111,14 +113,23 @@ export function AuthModalInner({ defaultMode, onClose }: { defaultMode: Mode; on
     e.preventDefault();
     setRegErr("");
     setRegOk("");
-    if (!turnstileToken) { setRegErr("Vui lòng hoàn thành Captcha"); return; }
+    if (!captchaToken) {
+      setRegErr("Vui lòng hoàn thành mã bảo vệ");
+      return;
+    }
     if (!regAgree) { setRegErr("Vui lòng đồng ý điều khoản"); return; }
     setRegLoading(true);
     try {
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: regName, email: regEmail, password: regPassword, phone: regPhone || undefined, turnstileToken }),
+        body: JSON.stringify({
+          name: regName,
+          email: regEmail,
+          password: regPassword,
+          phone: regPhone || undefined,
+          captchaToken,
+        }),
       });
       const data = (await res.json()) as { error?: string; message?: string; ok?: boolean };
       if (!res.ok) {
@@ -219,7 +230,13 @@ export function AuthModalInner({ defaultMode, onClose }: { defaultMode: Mode; on
     setFpSuccess("");
   }
 
-  const canRegister = regName.length >= 2 && regEmail.includes("@") && regPassword.length >= 8 && regAgree && (!turnstileKey || Boolean(turnstileToken));
+  const humanGateOk = Boolean(captchaToken);
+  const canRegister =
+    regName.length >= 2 &&
+    regEmail.includes("@") &&
+    regPassword.length >= 8 &&
+    regAgree &&
+    humanGateOk;
 
   return (
     <div
@@ -329,20 +346,15 @@ export function AuthModalInner({ defaultMode, onClose }: { defaultMode: Mode; on
                 </div>
               </div>
 
-              {turnstileKey ? (
-                <div className="auth-modal-captcha">
-                  <Turnstile siteKey={turnstileKey} onSuccess={setTurnstileToken} onExpire={() => setTurnstileToken("")} />
-                </div>
-              ) : (
-                <div className="auth-modal-captcha-warn">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-                  </svg>
-                  Captcha chưa được bật. Vui lòng nhờ quản trị viên bật Turnstile trong Cài đặt.
-                </div>
-              )}
+              <div className="auth-modal-captcha">
+                <CaptchaInput
+                  onVerify={setCaptchaToken}
+                  disabled={loginLoading}
+                  inputClassName="auth-modal-input captcha-input-code"
+                />
+              </div>
 
-              <button type="submit" className="auth-modal-submit" disabled={loginLoading || (!!turnstileKey && !turnstileToken)}>
+              <button type="submit" className="auth-modal-submit" disabled={loginLoading || !humanGateOk}>
                 {loginLoading ? <span className="auth-modal-spinner" /> : null}
                 {loginLoading ? "Đang đăng nhập…" : "Đăng nhập"}
               </button>
@@ -375,6 +387,14 @@ export function AuthModalInner({ defaultMode, onClose }: { defaultMode: Mode; on
                 <input id="am-reg-pwd" type="password" className="auth-modal-input" placeholder="Tối thiểu 8 ký tự" value={regPassword} onChange={(e) => setRegPassword(e.target.value)} required minLength={8} />
               </div>
 
+              <div className="auth-modal-captcha">
+                <CaptchaInput
+                  onVerify={setCaptchaToken}
+                  disabled={regLoading}
+                  inputClassName="auth-modal-input captcha-input-code"
+                />
+              </div>
+
               <label className="auth-modal-check">
                 <input type="checkbox" checked={regAgree} onChange={(e) => setRegAgree(e.target.checked)} />
                 <span>
@@ -384,19 +404,6 @@ export function AuthModalInner({ defaultMode, onClose }: { defaultMode: Mode; on
                   <span style={{ color: "var(--brand-green)", fontWeight: 600 }}>Chính sách bảo mật</span>
                 </span>
               </label>
-
-              {turnstileKey ? (
-                <div className="auth-modal-captcha">
-                  <Turnstile siteKey={turnstileKey} onSuccess={setTurnstileToken} onExpire={() => setTurnstileToken("")} />
-                </div>
-              ) : (
-                <div className="auth-modal-captcha-warn">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-                  </svg>
-                  Captcha chưa được bật. Vui lòng nhờ quản trị viên bật Turnstile trong Cài đặt.
-                </div>
-              )}
 
               <button type="submit" className="auth-modal-submit" disabled={!canRegister || regLoading}>
                 {regLoading ? <span className="auth-modal-spinner" /> : null}

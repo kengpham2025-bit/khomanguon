@@ -1,11 +1,11 @@
-﻿import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getDb } from "@/lib/db";
 import { newId } from "@/lib/ids";
 import { sha256Hex } from "@/lib/hash";
 import { getSessionFromCookies } from "@/lib/session";
-import { verifyTurnstile } from "@/lib/turnstile";
 import { sendTransactionalEmail, otpWithdrawHtml } from "@/lib/email";
+import { verifyCaptchaConsumeToken } from "@/lib/captcha-consume-jwt";
 
 async function requireWithdrawSeller() {
   const s = await getSessionFromCookies();
@@ -25,7 +25,7 @@ async function requireWithdrawSeller() {
 const schema = z.object({
   bankAccountId: z.string().uuid(),
   amountVnd: z.number().int().positive().max(1_000_000_000),
-  turnstileToken: z.string().min(1),
+  captchaToken: z.string().min(1),
 });
 
 function randomOtp(): string {
@@ -42,10 +42,9 @@ export async function POST(req: Request) {
     const parsed = schema.safeParse(await req.json());
     if (!parsed.success) return NextResponse.json({ error: "Dữ liệu không hợp lệ" }, { status: 400 });
 
-    const ip = req.headers.get("cf-connecting-ip") || req.headers.get("x-forwarded-for") || undefined;
-    const captchaOk = await verifyTurnstile(undefined, parsed.data.turnstileToken, ip);
+    const captchaOk = await verifyCaptchaConsumeToken(parsed.data.captchaToken);
     if (!captchaOk) {
-      return NextResponse.json({ error: "Captcha không hợp lệ" }, { status: 400 });
+      return NextResponse.json({ error: "Mã bảo vệ không hợp lệ hoặc đã hết hạn" }, { status: 400 });
     }
 
     const db = getDb();

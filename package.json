@@ -9,8 +9,8 @@
     "start": "next start",
     "lint": "eslint",
     "pages:build": "cross-env NEXT_TRACE_SPAN_THRESHOLD_MS=999999999 next build && npx @opennextjs/cloudflare build",
-    "pages:preview": "wrangler pages dev .open-next/cloudflare",
-    "pages:deploy": "wrangler pages deploy .open-next/cloudflare",
+    "pages:preview": "npx @opennextjs/cloudflare preview",
+    "pages:deploy": "npx @opennextjs/cloudflare deploy",
     "d1:migrate": "wrangler d1 execute khomanguonnew --remote --file=./schema.sql",
     "d1:migrate:local": "wrangler d1 execute khomanguonnew --local --file=./schema.sql"
   },

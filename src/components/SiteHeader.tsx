@@ -46,7 +46,7 @@ export function SiteHeader() {
 
           {/* Logo */}
           <Link href="/" className="header-logo" aria-label="Trang chủ">
-            <SiteLogo height={56} priority />
+            <SiteLogo height={56} clipToLayout layoutHeight={44} priority />
           </Link>
 
           {/* Search Bar */}

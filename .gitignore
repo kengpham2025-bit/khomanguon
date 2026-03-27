@@ -5,3 +5,7 @@ node_modules
 .env*.local
 *.log
 .open-next
+
+# Wrangler local D1 / cache (không đẩy lên Git)
+.wrangler/state/
+.wrangler/cache/

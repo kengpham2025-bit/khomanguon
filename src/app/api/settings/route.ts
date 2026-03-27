@@ -1,9 +1,9 @@
-﻿/**
+/**
  * GET /api/settings — settings công khai cho client (public keys)
  * Chỉ trả về các key KHÔNG có is_secret.
  */
 import { NextResponse } from "next/server";
-import { getAllSettings } from "@/lib/settings";
+import { getAllSettings, getSetting } from "@/lib/settings";
 
 export async function GET() {
   try {
@@ -14,6 +14,8 @@ export async function GET() {
         publicSettings[row.key] = row.value;
       }
     }
+    const turnstileSite = await getSetting("turnstile_site_key");
+    if (turnstileSite) publicSettings.turnstile_site_key = turnstileSite;
     return NextResponse.json({ ok: true, settings: publicSettings });
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : String(e);

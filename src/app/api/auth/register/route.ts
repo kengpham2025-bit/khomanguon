@@ -1,19 +1,48 @@
-﻿import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { hashPassword } from "@/lib/password";
 import { z } from "zod";
 import { getDb } from "@/lib/db";
 import { newId } from "@/lib/ids";
 import { sha256Hex } from "@/lib/hash";
-import { verifyTurnstile } from "@/lib/turnstile";
 import { sendTransactionalEmail, verificationEmailHtml, getAppUrl } from "@/lib/email";
+import { verifyCaptchaConsumeToken } from "@/lib/captcha-consume-jwt";
+import { verifyTurnstile } from "@/lib/turnstile";
 
-const bodySchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8),
-  name: z.string().min(2),
-  phone: z.string().optional(),
-  turnstileToken: z.string().min(1),
-});
+const bodySchema = z
+  .object({
+    email: z.string().email(),
+    password: z.string().min(8),
+    name: z.string().min(2),
+    phone: z.string().optional(),
+    captchaToken: z.string().min(1).optional(),
+    turnstileToken: z.string().min(1).optional(),
+  })
+  .refine((d) => Boolean(d.captchaToken) || Boolean(d.turnstileToken), {
+    message: "Thiếu mã bảo vệ",
+    path: ["captchaToken"],
+  });
+
+function clientIp(req: Request): string | undefined {
+  const cf = req.headers.get("cf-connecting-ip");
+  if (cf?.trim()) return cf.trim();
+  const xff = req.headers.get("x-forwarded-for");
+  const first = xff?.split(",")[0]?.trim();
+  return first || undefined;
+}
+
+async function verifyHumanGate(
+  captchaToken: string | undefined,
+  turnstileToken: string | undefined,
+  req: Request,
+): Promise<boolean> {
+  if (turnstileToken) {
+    return verifyTurnstile(undefined, turnstileToken, clientIp(req));
+  }
+  if (captchaToken) {
+    return verifyCaptchaConsumeToken(captchaToken);
+  }
+  return false;
+}
 
 export async function POST(req: Request) {
   try {
@@ -22,12 +51,11 @@ export async function POST(req: Request) {
     if (!parsed.success) {
       return NextResponse.json({ error: "Dữ liệu không hợp lệ" }, { status: 400 });
     }
-    const { email, password, name, phone, turnstileToken } = parsed.data;
+    const { email, password, name, phone, captchaToken, turnstileToken } = parsed.data;
 
-    const ip = req.headers.get("cf-connecting-ip") || req.headers.get("x-forwarded-for") || undefined;
-    const ok = await verifyTurnstile(undefined, turnstileToken, ip);
+    const ok = await verifyHumanGate(captchaToken, turnstileToken, req);
     if (!ok) {
-      return NextResponse.json({ error: "Xác minh Captcha thất bại" }, { status: 400 });
+      return NextResponse.json({ error: "Mã bảo vệ không hợp lệ hoặc đã hết hạn" }, { status: 400 });
     }
 
     const db = getDb();

@@ -8,6 +8,7 @@
  */
 
 import { getDb } from "@/lib/db";
+import { turnstileSecret, turnstileSiteKey } from "@/lib/env-edge";
 import { newId } from "@/lib/ids";
 
 // ─── Types ─────────────────────────────────────────────────────────────────
@@ -249,18 +250,25 @@ export async function getAllSettings(): Promise<SettingRow[]> {
 export async function getSetting(key: string): Promise<string> {
   const rows = await getAllSettings();
   const row = rows.find((r) => r.key === key);
-  if (row !== undefined) return row.value;
   const def = SETTINGS_DEFINITIONS.find((d) => d.key === key);
+  // Turnstile: ưu tiên env Worker (Dashboard) trước D1 — tránh seed/admin lưu secret cũ/sai làm siteverify fail
+  if (key === "turnstile_site_key") {
+    const site = turnstileSiteKey();
+    if (site) return site;
+  }
+  if (key === "turnstile_secret_key") {
+    const sec = turnstileSecret();
+    if (sec) return sec;
+  }
+  if (row !== undefined && row.value.trim() !== "") return row.value;
   return def?.defaultValue ?? "";
 }
 
 /** Đọc nhiều key cùng lúc. */
 export async function getSettings(keys: string[]): Promise<Record<string, string>> {
-  const rows = await getAllSettings();
   const result: Record<string, string> = {};
   for (const k of keys) {
-    const row = rows.find((r) => r.key === k);
-    result[k] = row?.value ?? SETTINGS_DEFINITIONS.find((d) => d.key === k)?.defaultValue ?? "";
+    result[k] = await getSetting(k);
   }
   return result;
 }

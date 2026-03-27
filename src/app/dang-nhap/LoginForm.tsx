@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
-import { Turnstile } from "@marsidev/react-turnstile";
 import { IconX, IconEye, IconEyeOff } from "@/components/Icons";
 import { BottomWaves } from "@/components/Waves";
 import { SiteLogo } from "@/components/SiteLogo";
 import { LoadingOverlay } from "@/components/ui/LoadingOverlay";
+import { CaptchaInput } from "@/components/CaptchaInput";
 import { notifyError, notifySuccess } from "@/lib/notify";
 import { useAuthModal } from "@/components/AuthModal";
 
@@ -24,10 +24,9 @@ export function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [show, setShow] = useState(false);
-  const [token, setToken] = useState("");
+  const [captchaToken, setCaptchaToken] = useState("");
   const [err, setErr] = useState("");
   const [loading, setLoading] = useState(false);
-  const [siteKey, setSiteKey] = useState("");
 
   useEffect(() => {
     if (oauthError) {
@@ -42,10 +41,6 @@ export function LoginForm() {
     fetch("/api/auth/oauth/config")
       .then((r) => r.json() as Promise<OauthConfig>)
       .then(setOauthConfig)
-      .catch(() => {});
-    fetch("/api/settings")
-      .then((r) => r.json() as Promise<{ settings?: Record<string, string> }>)
-      .then((d) => setSiteKey(d.settings?.turnstile_site_key ?? ""))
       .catch(() => {});
   }, [oauthError, router]);
 
@@ -62,14 +57,8 @@ export function LoginForm() {
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setErr("");
-    if (!siteKey) {
-      const m = "Thiếu NEXT_PUBLIC_TURNSTILE_SITE_KEY";
-      setErr(m);
-      notifyError(m);
-      return;
-    }
-    if (!token) {
-      const m = "Vui lòng hoàn thành Captcha";
+    if (!captchaToken) {
+      const m = "Vui lòng hoàn thành mã bảo vệ";
       setErr(m);
       notifyError(m);
       return;
@@ -79,7 +68,7 @@ export function LoginForm() {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, turnstileToken: token }),
+        body: JSON.stringify({ email, password, captchaToken }),
       });
       const data = (await res.json()) as { error?: string; user?: unknown; ok?: boolean };
       if (!res.ok) {
@@ -154,15 +143,9 @@ export function LoginForm() {
               </button>
             </div>
 
-            <div className="flex justify-center" style={{ padding: "var(--space-2) 0" }}>
-              {siteKey ? (
-                <Turnstile siteKey={siteKey} onSuccess={setToken} onExpire={() => setToken("")} />
-              ) : (
-                <p style={{ fontSize: "0.75rem", color: "var(--warning-text)" }}>Cấu hình Turnstile để bật Captcha</p>
-              )}
-            </div>
+            <CaptchaInput onVerify={setCaptchaToken} disabled={loading} />
 
-            <button type="submit" disabled={loading} className="pill-btn-primary">
+            <button type="submit" disabled={loading || !captchaToken} className="pill-btn-primary">
               {loading ? "Đang đăng nhập…" : "Đăng nhập"}
             </button>
           </form>

@@ -159,6 +159,19 @@ CREATE TABLE IF NOT EXISTS withdrawals (
 );
 
 -- =====================
+-- MÃ CAPTCHA
+-- =====================
+CREATE TABLE IF NOT EXISTS captchas (
+  id TEXT PRIMARY KEY,
+  code_hash TEXT NOT NULL,
+  ip TEXT NOT NULL,
+  expires_at INTEGER NOT NULL,
+  created_at INTEGER NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_captchas_expires ON captchas(expires_at);
+
+-- =====================
 -- CẤU HÌNH HỆ THỐNG (admin quản lý qua /admin/settings)
 -- =====================
 CREATE TABLE IF NOT EXISTS settings (

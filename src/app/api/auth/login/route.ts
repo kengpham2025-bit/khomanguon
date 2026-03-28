@@ -3,7 +3,7 @@ import { verifyPassword } from "@/lib/password";
 import { z } from "zod";
 import { getDb } from "@/lib/db";
 import { SESSION_COOKIE_NAME, sessionCookieOptions, signSession } from "@/lib/auth";
-import { verifyCaptchaConsumeToken } from "@/lib/captcha-consume-jwt";
+import { verifyAndConsumeCaptchaPass } from "@/lib/captcha-pass";
 import { verifyTurnstile } from "@/lib/turnstile";
 
 const bodySchema = z
@@ -35,7 +35,7 @@ async function verifyHumanGate(
     return verifyTurnstile(undefined, turnstileToken, clientIp(req));
   }
   if (captchaToken) {
-    return verifyCaptchaConsumeToken(captchaToken);
+    return verifyAndConsumeCaptchaPass(captchaToken);
   }
   return false;
 }

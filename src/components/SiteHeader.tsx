@@ -41,13 +41,18 @@ export function SiteHeader() {
           Mã nguồn, tài khoản và dịch vụ AI — uy tín, bảo mật, giao dịch an toàn
         </p>
       </div>
-      <header className="site-header">
-        <div className="site-header-inner">
 
-          {/* Logo */}
-          <Link href="/" className="header-logo" aria-label="Trang chủ">
-            <SiteLogo height={56} clipToLayout layoutHeight={44} priority />
-          </Link>
+      <div className="site-header-shell">
+        <div className="site-logo-strip">
+          <div className="site-logo-strip-inner">
+            <Link href="/" className="site-logo-strip-link" aria-label="Trang chủ">
+              <SiteLogo height={80} priority className="site-logo-strip-mark" />
+            </Link>
+          </div>
+        </div>
+
+        <header className="site-header">
+        <div className="site-header-inner">
 
           {/* Search Bar */}
           <form className="header-search" onSubmit={handleSearch} role="search">
@@ -163,7 +168,8 @@ export function SiteHeader() {
             </button>
           </div>
         ) : null}
-      </header>
+        </header>
+      </div>
     </>
   );
 }

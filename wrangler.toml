@@ -24,7 +24,7 @@ database_id = "a68e1aec-8fff-4a5f-a1cd-9a54d9623dd2"
 [images]
 binding = "IMAGES"
 
-# JWT_SECRET — bắt buộc cho captcha SVG (consume token): wrangler secret put JWT_SECRET
+# JWT_SECRET — session đăng nhập (không dùng cho captcha): wrangler secret put JWT_SECRET
 # PayOS — Workers: wrangler secret put PAYOS_CLIENT_ID  (và các biến còn lại)
 # Webhook: https://khomanguon.io.vn/api/deposit/webhook
 [vars]

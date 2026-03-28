@@ -5,7 +5,7 @@ import { newId } from "@/lib/ids";
 import { sha256Hex } from "@/lib/hash";
 import { getSessionFromCookies } from "@/lib/session";
 import { sendTransactionalEmail, otpWithdrawHtml } from "@/lib/email";
-import { verifyCaptchaConsumeToken } from "@/lib/captcha-consume-jwt";
+import { verifyAndConsumeCaptchaPass } from "@/lib/captcha-pass";
 
 async function requireWithdrawSeller() {
   const s = await getSessionFromCookies();
@@ -42,7 +42,7 @@ export async function POST(req: Request) {
     const parsed = schema.safeParse(await req.json());
     if (!parsed.success) return NextResponse.json({ error: "Dữ liệu không hợp lệ" }, { status: 400 });
 
-    const captchaOk = await verifyCaptchaConsumeToken(parsed.data.captchaToken);
+    const captchaOk = await verifyAndConsumeCaptchaPass(parsed.data.captchaToken);
     if (!captchaOk) {
       return NextResponse.json({ error: "Mã bảo vệ không hợp lệ hoặc đã hết hạn" }, { status: 400 });
     }

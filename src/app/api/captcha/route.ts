@@ -4,7 +4,6 @@
  */
 import { NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
-import { signCaptchaConsumeToken } from "@/lib/captcha-consume-jwt";
 
 /* ---------- Math captcha generator ---------- */
 
@@ -62,8 +61,9 @@ export async function GET() {
     const now = Date.now();
     const expiresAt = now + 10 * 60 * 1000; // 10 phút
 
-    // Dọn captcha cũ
+    // Dọn captcha / vé pass hết hạn
     await db.prepare(`DELETE FROM captchas WHERE expires_at < ?`).bind(now).run();
+    await db.prepare(`DELETE FROM captcha_passes WHERE expires_at < ?`).bind(now).run();
 
     await db
       .prepare(
@@ -118,19 +118,18 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: false, reason: "Kết quả không đúng" }, { status: 400 });
     }
 
-    const consumeToken = await signCaptchaConsumeToken(row.id, row.expires_at);
-
-    // Xóa captcha sau khi verify thành công
+    // Xóa bài toán đã dùng
     await db.prepare(`DELETE FROM captchas WHERE id = ?`).bind(id.trim()).run();
 
-    if (!consumeToken) {
-      return NextResponse.json(
-        { ok: false, reason: "Máy chủ chưa cấu hình JWT_SECRET" },
-        { status: 500 },
-      );
-    }
+    // Vé một lần trong D1 — không dùng JWT_SECRET
+    const passId = crypto.randomUUID();
+    const passExpires = Date.now() + 5 * 60 * 1000;
+    await db
+      .prepare(`INSERT INTO captcha_passes (id, expires_at, created_at) VALUES (?, ?, ?)`)
+      .bind(passId, passExpires, Date.now())
+      .run();
 
-    return NextResponse.json({ ok: true, consumeToken });
+    return NextResponse.json({ ok: true, consumeToken: passId });
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : String(e);
     return NextResponse.json({ error: msg }, { status: 500 });

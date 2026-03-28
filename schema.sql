@@ -171,6 +171,15 @@ CREATE TABLE IF NOT EXISTS captchas (
 
 CREATE INDEX IF NOT EXISTS idx_captchas_expires ON captchas(expires_at);
 
+-- Vé xác minh captcha một lần (không dùng JWT_SECRET)
+CREATE TABLE IF NOT EXISTS captcha_passes (
+  id TEXT PRIMARY KEY,
+  expires_at INTEGER NOT NULL,
+  created_at INTEGER NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_captcha_passes_expires ON captcha_passes(expires_at);
+
 -- =====================
 -- CẤU HÌNH HỆ THỐNG (admin quản lý qua /admin/settings)
 -- =====================

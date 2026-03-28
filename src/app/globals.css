@@ -567,16 +567,54 @@ h4 { font-size: 1.25rem; }
 .top-bar-sep { color: rgba(255,255,255,0.4); }
 
 /* ═══════════════════════════════════════════════════════════════
-   SITE HEADER
+   SITE HEADER (logo tách riêng — không chung flex với thanh tìm kiếm)
    ═══════════════════════════════════════════════════════════════ */
-.site-header {
+.site-header-shell {
   position: sticky;
   top: 0;
   z-index: 50;
   background: #ffffff;
-  border-bottom: 1px solid var(--border-default);
   box-shadow: var(--shadow-header);
   transition: box-shadow var(--transition-base);
+}
+.site-logo-strip {
+  background: #ffffff;
+  border-bottom: 1px solid var(--border-default);
+}
+.site-logo-strip-inner {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding: 0.5rem var(--space-3);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.site-logo-strip-link {
+  display: inline-flex;
+  align-items: center;
+  line-height: 0;
+  border-radius: var(--radius-md);
+  outline: none;
+}
+/* Logo to, kích thước độc lập với hàng search/nav (ghi đè height inline của SiteLogo) */
+.site-logo-strip .site-logo-strip-mark img {
+  height: clamp(3.35rem, 7.5vw, 5.125rem) !important;
+  max-width: min(100%, 380px) !important;
+  width: auto !important;
+  object-fit: contain;
+  display: block;
+}
+@media (max-width: 480px) {
+  .site-logo-strip-inner {
+    padding: 0.4rem var(--space-3);
+    justify-content: center;
+  }
+}
+.site-header {
+  position: relative;
+  background: #ffffff;
+  border-bottom: 1px solid var(--border-default);
+  box-shadow: none;
 }
 .site-header-inner {
   max-width: 1200px;
@@ -585,11 +623,10 @@ h4 { font-size: 1.25rem; }
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
-  /* Gọn theo hàng nút / ô tìm — không padding dọc quá lớn */
   padding: 0.375rem var(--space-3);
 }
 
-/* Logo */
+/* Logo trong header (trang auth / chỗ khác dùng class cũ) */
 .header-logo {
   display: flex;
   align-items: center;
@@ -598,7 +635,6 @@ h4 { font-size: 1.25rem; }
   border-radius: var(--radius-md);
   overflow: visible;
 }
-/* Logo to hơn slot nhưng không tăng chiều cao flex của header */
 .header-logo .site-logo--layout-slot {
   position: relative;
   z-index: 1;

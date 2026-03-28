@@ -39,9 +39,6 @@ export function SiteHeader() {
       <div className="site-header-shell">
         <div className="top-bar">
           <div className="top-bar-inner">
-            <Link href="/" className="top-bar-logo-link" aria-label="Trang chủ">
-              <SiteLogo variant="dark" height={96} priority className="top-bar-logo-mark" />
-            </Link>
             <p className="top-bar-slogan" lang="vi">
               Mã nguồn, tài khoản và dịch vụ AI — uy tín, bảo mật, giao dịch an toàn
             </p>
@@ -51,21 +48,25 @@ export function SiteHeader() {
         <header className="site-header">
         <div className="site-header-inner">
 
-          {/* Search Bar */}
-          <form className="header-search" onSubmit={handleSearch} role="search">
-            <input
-              ref={searchRef}
-              type="search"
-              className="header-search-input"
-              placeholder="Tìm kiếm sản phẩm, mã nguồn..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              aria-label="Tìm kiếm sản phẩm"
-            />
-            <button type="submit" className="header-search-btn" aria-label="Tìm kiếm">
-              <IconSearch size={18} strokeWidth={2.25} />
-            </button>
-          </form>
+          <div className="header-brand-search">
+            <Link href="/" className="header-bar-logo-link" aria-label="Trang chủ">
+              <SiteLogo variant="light" height={52} priority className="header-bar-logo-mark" />
+            </Link>
+            <form className="header-search" onSubmit={handleSearch} role="search">
+              <input
+                ref={searchRef}
+                type="search"
+                className="header-search-input"
+                placeholder="Tìm kiếm sản phẩm, mã nguồn..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                aria-label="Tìm kiếm sản phẩm"
+              />
+              <button type="submit" className="header-search-btn" aria-label="Tìm kiếm">
+                <IconSearch size={18} strokeWidth={2.25} />
+              </button>
+            </form>
+          </div>
 
           {/* Desktop Nav */}
           <nav className="nav-desktop">

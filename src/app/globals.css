@@ -1545,6 +1545,20 @@ h4 { font-size: 1.25rem; }
   color: var(--success-text);
   font-weight: 600;
 }
+
+/* Captcha chọn biểu tượng SVG */
+.captcha-svg-tile:hover:not(:disabled) {
+  border-color: var(--brand-green);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
+}
+.captcha-svg-tile-inner svg {
+  width: 100%;
+  height: auto;
+  max-width: 52px;
+  max-height: 52px;
+  display: block;
+}
+
 .divider {
   position: relative;
   text-align: center;

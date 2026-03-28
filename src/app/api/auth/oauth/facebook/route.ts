@@ -1,7 +1,7 @@
-﻿import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 import { newId } from "@/lib/ids";
-import { SESSION_COOKIE_NAME, sessionCookieOptions, signSession } from "@/lib/auth";
+import { SESSION_COOKIE_NAME, sessionCookieOptions, createSession } from "@/lib/sessions";
 import {
   facebookOAuthUrl,
   facebookAppId,
@@ -74,11 +74,11 @@ export async function GET(req: Request) {
         .run();
     }
 
-    const jwt = await signSession({ userId, email: userData.email.toLowerCase(), role: "user" });
+    const token = await createSession(userId);
     const redirectTo = stateRow.redirect_to || "/tai-khoan";
 
     const res = NextResponse.redirect(new URL(redirectTo, req.url));
-    res.cookies.set(SESSION_COOKIE_NAME, jwt, sessionCookieOptions(60 * 60 * 24 * 7));
+    res.cookies.set(SESSION_COOKIE_NAME, token, sessionCookieOptions(60 * 60 * 24 * 7));
     return res;
   }
 

@@ -1,4 +1,4 @@
-﻿import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getDb } from "@/lib/db";
 import { newId } from "@/lib/ids";
@@ -7,11 +7,11 @@ import { VN_BANKS } from "@/lib/vn-banks";
 
 async function requireWithdrawSeller() {
   const s = await getSessionFromCookies();
-  if (!s?.sub) return null;
+  if (!s?.userId) return null;
   const db = getDb();
   const u = await db
     .prepare(`SELECT id, role, seller_status FROM users WHERE id = ?`)
-    .bind(s.sub)
+    .bind(s.userId)
     .first<{ id: string; role: string; seller_status: string }>();
   if (!u) return null;
   const ok =

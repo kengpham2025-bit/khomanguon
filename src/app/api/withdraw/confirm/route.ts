@@ -1,4 +1,4 @@
-﻿import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getDb } from "@/lib/db";
 import { sha256Hex } from "@/lib/hash";
@@ -11,7 +11,7 @@ const schema = z.object({
 
 export async function POST(req: Request) {
   const s = await getSessionFromCookies();
-  if (!s?.sub) return NextResponse.json({ error: "Cần đăng nhập" }, { status: 401 });
+  if (!s?.userId) return NextResponse.json({ error: "Cần đăng nhập" }, { status: 401 });
 
   const parsed = schema.safeParse(await req.json());
   if (!parsed.success) return NextResponse.json({ error: "OTP không hợp lệ" }, { status: 400 });
@@ -19,7 +19,7 @@ export async function POST(req: Request) {
   const db = getDb();
   const w = await db
     .prepare(`SELECT * FROM withdrawals WHERE id = ? AND user_id = ?`)
-    .bind(parsed.data.withdrawalId, s.sub)
+    .bind(parsed.data.withdrawalId, s.userId)
     .first<{ id: string; status: string }>();
 
   if (!w || w.status !== "pending_otp") {
@@ -31,7 +31,7 @@ export async function POST(req: Request) {
     .prepare(
       `SELECT id FROM tokens WHERE user_id = ? AND type = 'withdraw_otp' AND ref_id = ? AND token_hash = ? AND expires_at > ?`,
     )
-    .bind(s.sub, parsed.data.withdrawalId, hash, Math.floor(Date.now() / 1000))
+    .bind(s.userId, parsed.data.withdrawalId, hash, Math.floor(Date.now() / 1000))
     .first<{ id: string }>();
 
   if (!tok) return NextResponse.json({ error: "Sai OTP hoặc đã hết hạn" }, { status: 400 });

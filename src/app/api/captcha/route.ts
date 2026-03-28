@@ -1,67 +1,91 @@
 /**
- * GET /api/captcha — tạo phép toán mới, trả về id + câu hỏi.
- * Body (POST) để verify: { id, answer } → { ok: true/false }
+ * GET /api/captcha — captcha chọn biểu tượng SVG (không phép toán).
+ * POST: { id, answer: "<icon_key>" } → { ok, consumeToken }
  */
 import { NextResponse } from "next/server";
 import { getDb } from "@/lib/db";
 
-/* ---------- Math captcha generator ---------- */
+/* ---------- SVG icon pool (key = đáp án server, label = gợi ý tiếng Việt) ---------- */
 
-type Operator = "+" | "-";
+const ICON_POOL: { key: string; label: string; body: string }[] = [
+  {
+    key: "circle",
+    label: "hình tròn",
+    body: `<circle cx="24" cy="24" r="14" fill="none" stroke="#0f766e" stroke-width="3"/>`,
+  },
+  {
+    key: "square",
+    label: "hình vuông",
+    body: `<rect x="11" y="11" width="26" height="26" rx="2" fill="none" stroke="#0f766e" stroke-width="3"/>`,
+  },
+  {
+    key: "triangle",
+    label: "tam giác",
+    body: `<path d="M24 10 L38 38 H10 Z" fill="none" stroke="#0f766e" stroke-width="3" stroke-linejoin="round"/>`,
+  },
+  {
+    key: "star",
+    label: "ngôi sao",
+    body: `<path d="M24 8l3.2 9.8h10.4l-8.4 6.1 3.2 9.9-8.4-6.1-8.4 6.1 3.2-9.9-8.4-6.1h10.4z" fill="none" stroke="#0f766e" stroke-width="2.2" stroke-linejoin="round"/>`,
+  },
+  {
+    key: "bolt",
+    label: "tia chớp",
+    body: `<path d="M28 6L12 26h10l-4 16 16-22H26z" fill="none" stroke="#0f766e" stroke-width="2.6" stroke-linejoin="round"/>`,
+  },
+  {
+    key: "diamond",
+    label: "hình thoi",
+    body: `<path d="M24 9 L37 24 24 39 11 24 Z" fill="none" stroke="#0f766e" stroke-width="3" stroke-linejoin="round"/>`,
+  },
+  {
+    key: "hexagon",
+    label: "lục giác",
+    body: `<path d="M24 8l10 6v12l-10 6-10-6V14z" fill="none" stroke="#0f766e" stroke-width="3" stroke-linejoin="round"/>`,
+  },
+];
 
-interface MathProblem {
-  a: number;
-  b: number;
-  op: Operator;
-  answer: number;
-}
-
-function generateMathProblem(): MathProblem {
-  const op: Operator = Math.random() < 0.6 ? "+" : "-";
-  let a: number;
-  let b: number;
-
-  if (op === "+") {
-    a = Math.floor(Math.random() * 15) + 3; // 3–17
-    b = Math.floor(Math.random() * 10) + 2; // 2–11
-    // result 5–28, always positive
-  } else {
-    a = Math.floor(Math.random() * 12) + 8; // 8–19
-    b = Math.floor(Math.random() * 7) + 2;   // 2–8
-    // result 1–17, always positive
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
   }
-
-  return { a, b, op, answer: op === "+" ? a + b : a - b };
+  return a;
 }
 
-function mathQuestionText(p: MathProblem): string {
-  return `${p.a} ${p.op} ${p.b} = ?`;
+function wrapSvg(body: string): string {
+  return (
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" aria-hidden="true">` +
+    body +
+    `</svg>`
+  );
 }
 
-async function hashAnswer(answer: number, salt: string): Promise<string> {
-  const data = new TextEncoder().encode(`${answer}|${salt}`);
+async function hashChallenge(value: string, salt: string): Promise<string> {
+  const data = new TextEncoder().encode(value.toLowerCase().trim() + "|" + salt);
   const hash = await crypto.subtle.digest("SHA-256", data);
   return Array.from(new Uint8Array(hash))
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
 }
 
-/* ---------- GET: tạo captcha toán mới ---------- */
+const KEY_RE = /^[a-z][a-z0-9_]{0,31}$/;
+
+/* ---------- GET ---------- */
 export async function GET() {
   try {
     const db = getDb();
-    const problem = generateMathProblem();
-
-    // Salt cố định trong ngày
+    const four = shuffle([...ICON_POOL]).slice(0, 4);
+    const correct = four[Math.floor(Math.random() * four.length)]!;
     const salt = new Date().toISOString().slice(0, 10);
-    const hashedAnswer = await hashAnswer(problem.answer, salt);
+    const hashedAnswer = await hashChallenge(correct.key, salt);
 
     const id = crypto.randomUUID();
     const ip = "unknown";
     const now = Date.now();
-    const expiresAt = now + 10 * 60 * 1000; // 10 phút
+    const expiresAt = now + 10 * 60 * 1000;
 
-    // Dọn captcha / vé pass hết hạn
     await db.prepare(`DELETE FROM captchas WHERE expires_at < ?`).bind(now).run();
     await db.prepare(`DELETE FROM captcha_passes WHERE expires_at < ?`).bind(now).run();
 
@@ -72,14 +96,23 @@ export async function GET() {
       .bind(id, hashedAnswer, ip, expiresAt, now)
       .run();
 
-    return NextResponse.json({ id, question: mathQuestionText(problem) });
+    const icons = shuffle(four).map((item) => ({
+      key: item.key,
+      svg: wrapSvg(item.body),
+    }));
+
+    return NextResponse.json({
+      id,
+      prompt: `Chọn biểu tượng ${correct.label}`,
+      icons,
+    });
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : String(e);
     return NextResponse.json({ error: msg }, { status: 500 });
   }
 }
 
-/* ---------- POST: verify captcha ---------- */
+/* ---------- POST ---------- */
 export async function POST(req: Request) {
   try {
     const body = await req.json() as { id?: unknown; answer?: unknown };
@@ -88,13 +121,13 @@ export async function POST(req: Request) {
     if (!id || typeof id !== "string" || !id.trim()) {
       return NextResponse.json({ ok: false, reason: "Thiếu mã xác minh" }, { status: 400 });
     }
-    if (answer === undefined || answer === null || String(answer).trim() === "") {
-      return NextResponse.json({ ok: false, reason: "Thiếu kết quả" }, { status: 400 });
+    if (answer === undefined || answer === null) {
+      return NextResponse.json({ ok: false, reason: "Chưa chọn biểu tượng" }, { status: 400 });
     }
 
-    const numAnswer = Number(answer);
-    if (!Number.isInteger(numAnswer)) {
-      return NextResponse.json({ ok: false, reason: "Kết quả phải là số nguyên" }, { status: 400 });
+    const key = String(answer).trim().toLowerCase();
+    if (!KEY_RE.test(key)) {
+      return NextResponse.json({ ok: false, reason: "Lựa chọn không hợp lệ" }, { status: 400 });
     }
 
     const db = getDb();
@@ -112,16 +145,14 @@ export async function POST(req: Request) {
     }
 
     const salt = new Date().toISOString().slice(0, 10);
-    const hashed = await hashAnswer(numAnswer, salt);
+    const hashed = await hashChallenge(key, salt);
 
     if (hashed !== row.code_hash) {
-      return NextResponse.json({ ok: false, reason: "Kết quả không đúng" }, { status: 400 });
+      return NextResponse.json({ ok: false, reason: "Chưa đúng biểu tượng" }, { status: 400 });
     }
 
-    // Xóa bài toán đã dùng
     await db.prepare(`DELETE FROM captchas WHERE id = ?`).bind(id.trim()).run();
 
-    // Vé một lần trong D1 — không dùng JWT_SECRET
     const passId = crypto.randomUUID();
     const passExpires = Date.now() + 5 * 60 * 1000;
     await db

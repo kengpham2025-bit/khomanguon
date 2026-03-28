@@ -1,4 +1,4 @@
-﻿import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { z } from "zod";
 import { getDb } from "@/lib/db";
 import { getSessionFromCookies } from "@/lib/session";
@@ -10,7 +10,7 @@ const schema = z.object({
 
 export async function POST(req: Request) {
   const s = await getSessionFromCookies();
-  if (!s?.sub) return NextResponse.json({ error: "Cần đăng nhập" }, { status: 401 });
+  if (!s?.userId) return NextResponse.json({ error: "Cần đăng nhập" }, { status: 401 });
 
   const parsed = schema.safeParse(await req.json());
   if (!parsed.success) return NextResponse.json({ error: "Ảnh CCCD quá lớn hoặc dữ liệu không hợp lệ" }, { status: 400 });
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
 
   await db
     .prepare(`UPDATE users SET kyc_status = 'pending', kyc_cccd_note = ?, kyc_submitted_at = ?, updated_at = ? WHERE id = ?`)
-    .bind(payload || "Đã gửi yêu cầu KYC", now, now, s.sub)
+    .bind(payload || "Đã gửi yêu cầu KYC", now, now, s.userId)
     .run();
 
   return NextResponse.json({ ok: true, message: "Đã gửi hồ sơ. Admin sẽ xét duyệt." });

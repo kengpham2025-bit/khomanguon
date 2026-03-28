@@ -9,11 +9,11 @@ import { verifyAndConsumeCaptchaPass } from "@/lib/captcha-pass";
 
 async function requireWithdrawSeller() {
   const s = await getSessionFromCookies();
-  if (!s?.sub) return null;
+  if (!s?.userId) return null;
   const db = getDb();
   const u = await db
     .prepare(`SELECT id, role, seller_status, email FROM users WHERE id = ?`)
-    .bind(s.sub)
+    .bind(s.userId)
     .first<{ id: string; role: string; seller_status: string; email: string }>();
   if (!u) return null;
   const ok =

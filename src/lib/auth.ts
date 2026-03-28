@@ -1,5 +1,6 @@
 import { SignJWT, jwtVerify } from "jose";
 import type { JWTPayload } from "jose";
+import { getJwtSecret, getJwtSecretOptional } from "@/lib/jwt-secret";
 
 export type SessionPayload = JWTPayload & {
   sub: string;
@@ -9,10 +10,8 @@ export type SessionPayload = JWTPayload & {
 
 const COOKIE = "kmn_session";
 
-function secretKey() {
-  const s = process.env.JWT_SECRET;
-  if (!s) throw new Error("Thiếu JWT_SECRET");
-  return new TextEncoder().encode(s);
+function secretKeyBytes(): Uint8Array {
+  return new TextEncoder().encode(getJwtSecret());
 }
 
 export async function signSession(payload: {
@@ -28,12 +27,14 @@ export async function signSession(payload: {
     .setSubject(payload.userId)
     .setIssuedAt()
     .setExpirationTime("7d")
-    .sign(secretKey());
+    .sign(secretKeyBytes());
 }
 
 export async function verifySession(token: string): Promise<SessionPayload | null> {
+  const secret = getJwtSecretOptional();
+  if (!secret) return null;
   try {
-    const { payload } = await jwtVerify(token, secretKey());
+    const { payload } = await jwtVerify(token, new TextEncoder().encode(secret));
     if (!payload.sub || typeof payload.email !== "string" || typeof payload.role !== "string")
       return null;
     return payload as SessionPayload;

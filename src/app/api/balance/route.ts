@@ -1,4 +1,4 @@
-﻿/**
+/**
  * API: Số dư tài khoản người dùng
  *
  * GET /api/balance
@@ -10,14 +10,14 @@ import { getSessionFromCookies } from "@/lib/session";
 
 export async function GET() {
   const session = await getSessionFromCookies();
-  if (!session?.sub) {
+  if (!session?.userId) {
     return NextResponse.json({ error: "Cần đăng nhập" }, { status: 401 });
   }
 
   const db = getDb();
   const row = await db
     .prepare(`SELECT balance_cents FROM user_balances WHERE user_id = ?`)
-    .bind(session.sub)
+    .bind(session.userId)
     .first<{ balance_cents: number }>();
 
   const balanceCents = row?.balance_cents ?? 0;

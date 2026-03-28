@@ -1,4 +1,4 @@
-﻿/**
+/**
  * API: Lịch sử nạp tiền của người dùng
  *
  * GET /api/deposit/history
@@ -10,7 +10,7 @@ import { getSessionFromCookies } from "@/lib/session";
 
 export async function GET() {
   const session = await getSessionFromCookies();
-  if (!session?.sub) {
+  if (!session?.userId) {
     return NextResponse.json({ error: "Cần đăng nhập" }, { status: 401 });
   }
 
@@ -24,7 +24,7 @@ export async function GET() {
        ORDER BY created_at DESC
        LIMIT 50`,
     )
-    .bind(session.sub)
+    .bind(session.userId)
     .all<{
       id: string;
       order_code: number;

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { verifyPassword } from "@/lib/password";
 import { z } from "zod";
 import { getDb } from "@/lib/db";
-import { SESSION_COOKIE_NAME, sessionCookieOptions, signSession } from "@/lib/auth";
+import { SESSION_COOKIE_NAME, sessionCookieOptions, createSession } from "@/lib/sessions";
 import { verifyAndConsumeCaptchaPass } from "@/lib/captcha-pass";
 import { verifyTurnstile } from "@/lib/turnstile";
 
@@ -80,12 +80,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const jwt = await signSession({
-      userId: user.id,
-      email: user.email,
-      role: user.role,
-    });
-
+    const token = await createSession(user.id);
     const res = NextResponse.json({
       ok: true,
       user: {
@@ -96,7 +91,7 @@ export async function POST(req: Request) {
         kyc_status: user.kyc_status,
       },
     });
-    res.cookies.set(SESSION_COOKIE_NAME, jwt, sessionCookieOptions(60 * 60 * 24 * 7));
+    res.cookies.set(SESSION_COOKIE_NAME, token, sessionCookieOptions(60 * 60 * 24 * 7));
     return res;
   } catch (e) {
     console.error(e);

@@ -98,6 +98,16 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true, message: "Đã gửi email xác nhận. Vui lòng kiểm tra hộp thư." });
   } catch (e) {
     console.error(e);
+    const msg = e instanceof Error ? e.message : String(e);
+    if (msg.includes("Gửi email thất bại")) {
+      return NextResponse.json(
+        {
+          error:
+            "Không gửi được email xác nhận (Resend). Kiểm tra RESEND_API_KEY / EMAIL_FROM trên Worker hoặc trong Admin → Cài đặt.",
+        },
+        { status: 502 },
+      );
+    }
     return NextResponse.json({ error: "Lỗi máy chủ" }, { status: 500 });
   }
 }

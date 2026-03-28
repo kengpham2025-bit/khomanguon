@@ -181,6 +181,19 @@ CREATE TABLE IF NOT EXISTS captcha_passes (
 CREATE INDEX IF NOT EXISTS idx_captcha_passes_expires ON captcha_passes(expires_at);
 
 -- =====================
+-- SESSION (D1-based, không dùng JWT_SECRET)
+-- =====================
+CREATE TABLE IF NOT EXISTS sessions (
+  id TEXT PRIMARY KEY,
+  user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  expires_at INTEGER NOT NULL,
+  created_at INTEGER NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_sessions_user ON sessions(user_id);
+CREATE INDEX IF NOT EXISTS idx_sessions_expires ON sessions(expires_at);
+
+-- =====================
 -- CẤU HÌNH HỆ THỐNG (admin quản lý qua /admin/settings)
 -- =====================
 CREATE TABLE IF NOT EXISTS settings (

@@ -21,7 +21,7 @@ const schema = z.object({
 
 export async function POST(req: Request) {
   const session = await getSessionFromCookies();
-  if (!session?.sub) {
+  if (!session?.userId) {
     return NextResponse.json({ error: "Cần đăng nhập" }, { status: 401 });
   }
 
@@ -33,7 +33,7 @@ export async function POST(req: Request) {
     );
   }
 
-  const userId = session.sub;
+  const userId = session.userId;
   const amountCents = parsed.data.amount;
   const orderCode = generateOrderCode();
   const depositId = newId();

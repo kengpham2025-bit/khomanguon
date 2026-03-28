@@ -18,6 +18,12 @@ const bodySchema = z
     path: ["captchaToken"],
   });
 
+/** Tránh 405 khi mở nhầm URL API trong trình duyệt (GET). */
+export function GET(req: Request) {
+  const url = new URL(req.url);
+  return NextResponse.redirect(new URL("/dang-nhap", url.origin), 302);
+}
+
 function clientIp(req: Request): string | undefined {
   const cf = req.headers.get("cf-connecting-ip");
   if (cf?.trim()) return cf.trim();

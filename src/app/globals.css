@@ -538,18 +538,40 @@ h4 { font-size: 1.25rem; }
 .alert-info { background: var(--info-bg); color: var(--info-text); border-color: #bfdbfe; }
 
 /* ═══════════════════════════════════════════════════════════════
-   TOP BAR
+   TOP BAR (logo + slogan cùng hàng trên nền xanh)
    ═══════════════════════════════════════════════════════════════ */
 .top-bar {
   background: linear-gradient(135deg, #047857 0%, #059669 42%, #10b981 100%);
-  padding: 0.5rem var(--space-3);
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 0.55rem var(--space-3);
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
 }
+.top-bar-inner {
+  max-width: 1200px;
+  margin-inline: auto;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: clamp(0.65rem, 2.5vw, 1.35rem);
+}
+.top-bar-logo-link {
+  display: inline-flex;
+  align-items: center;
+  line-height: 0;
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+  outline: none;
+}
+/* Logo lớn trên thanh xanh (ghi đè height/maxWidth inline SiteLogo) */
+.top-bar-logo-mark img {
+  height: clamp(3.65rem, 10vw, 6.25rem) !important;
+  max-width: min(100%, 440px) !important;
+  width: auto !important;
+  object-fit: contain;
+  display: block;
+}
 .top-bar-slogan {
+  flex: 1;
+  min-width: 0;
   margin: 0;
   font-family: var(--font-ui), var(--font-body), ui-sans-serif, system-ui, sans-serif;
   font-size: clamp(0.7rem, 2.8vw, 0.875rem);
@@ -558,8 +580,19 @@ h4 { font-size: 1.25rem; }
   letter-spacing: 0.02em;
   color: rgba(255, 255, 255, 0.96);
   text-wrap: balance;
-  max-width: min(52rem, 96vw);
+  text-align: center;
   padding-inline: var(--space-1);
+}
+@media (max-width: 640px) {
+  .top-bar-inner {
+    flex-direction: column;
+    gap: 0.45rem;
+    padding-block: 0.15rem;
+  }
+  .top-bar-slogan {
+    text-align: center;
+    max-width: min(52rem, 100%);
+  }
 }
 @media (max-width: 480px) {
   .top-bar-slogan { font-size: 0.68rem; letter-spacing: 0.01em; }
@@ -567,7 +600,7 @@ h4 { font-size: 1.25rem; }
 .top-bar-sep { color: rgba(255,255,255,0.4); }
 
 /* ═══════════════════════════════════════════════════════════════
-   SITE HEADER (logo tách riêng — không chung flex với thanh tìm kiếm)
+   SITE HEADER
    ═══════════════════════════════════════════════════════════════ */
 .site-header-shell {
   position: sticky;
@@ -576,39 +609,6 @@ h4 { font-size: 1.25rem; }
   background: #ffffff;
   box-shadow: var(--shadow-header);
   transition: box-shadow var(--transition-base);
-}
-.site-logo-strip {
-  background: #ffffff;
-  border-bottom: 1px solid var(--border-default);
-}
-.site-logo-strip-inner {
-  max-width: 1200px;
-  margin-inline: auto;
-  padding: 0.5rem var(--space-3);
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
-.site-logo-strip-link {
-  display: inline-flex;
-  align-items: center;
-  line-height: 0;
-  border-radius: var(--radius-md);
-  outline: none;
-}
-/* Logo to, kích thước độc lập với hàng search/nav (ghi đè height inline của SiteLogo) */
-.site-logo-strip .site-logo-strip-mark img {
-  height: clamp(3.35rem, 7.5vw, 5.125rem) !important;
-  max-width: min(100%, 380px) !important;
-  width: auto !important;
-  object-fit: contain;
-  display: block;
-}
-@media (max-width: 480px) {
-  .site-logo-strip-inner {
-    padding: 0.4rem var(--space-3);
-    justify-content: center;
-  }
 }
 .site-header {
   position: relative;

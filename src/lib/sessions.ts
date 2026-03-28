@@ -34,7 +34,6 @@ export async function createSession(userId: string): Promise<string> {
   // Dọn session hết hạn trước khi tạo mới
   await db.prepare(`DELETE FROM sessions WHERE expires_at < ?`).bind(now).run();
 
-  const token = crypto.randomUUID().replace(/-/g, "") + crypto.randomUUID().replace(/-/g, "");
   const sessionId = crypto.randomUUID();
   const expiresAt = now + 7 * 24 * 60 * 60; // 7 ngày
 
@@ -45,7 +44,7 @@ export async function createSession(userId: string): Promise<string> {
     .bind(sessionId, userId, expiresAt, now)
     .run();
 
-  return token;
+  return sessionId;
 }
 
 /* ─── Verify / Get ───────────────────────────────────────────────────────── */

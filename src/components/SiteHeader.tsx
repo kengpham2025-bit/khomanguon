@@ -36,18 +36,15 @@ export function SiteHeader() {
 
   return (
     <>
-      <div className="top-bar">
-        <p className="top-bar-slogan" lang="vi">
-          Mã nguồn, tài khoản và dịch vụ AI — uy tín, bảo mật, giao dịch an toàn
-        </p>
-      </div>
-
       <div className="site-header-shell">
-        <div className="site-logo-strip">
-          <div className="site-logo-strip-inner">
-            <Link href="/" className="site-logo-strip-link" aria-label="Trang chủ">
-              <SiteLogo height={80} priority className="site-logo-strip-mark" />
+        <div className="top-bar">
+          <div className="top-bar-inner">
+            <Link href="/" className="top-bar-logo-link" aria-label="Trang chủ">
+              <SiteLogo variant="dark" height={96} priority className="top-bar-logo-mark" />
             </Link>
+            <p className="top-bar-slogan" lang="vi">
+              Mã nguồn, tài khoản và dịch vụ AI — uy tín, bảo mật, giao dịch an toàn
+            </p>
           </div>
         </div>
 

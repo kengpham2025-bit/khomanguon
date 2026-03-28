@@ -2,27 +2,25 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-type CaptchaIcon = { key: string; svg: string };
-
 interface CaptchaData {
   id: string;
+  svg: string;
+  length: number;
   prompt: string;
-  icons: CaptchaIcon[];
 }
 
 interface CaptchaInputProps {
   onVerify: (token: string) => void;
   disabled?: boolean;
-  /** Giữ prop để tương thích form cũ (modal/auth); captcha SVG không dùng làm input text */
   inputClassName?: string;
 }
 
-export function CaptchaInput({ onVerify, disabled }: CaptchaInputProps) {
+export function CaptchaInput({ onVerify, disabled, inputClassName = "input" }: CaptchaInputProps) {
   const [data, setData] = useState<CaptchaData | null>(null);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
   const [verified, setVerified] = useState(false);
-  const [picking, setPicking] = useState<string | null>(null);
+  const [code, setCode] = useState("");
   const [busy, setBusy] = useState(false);
   const onVerifyRef = useRef(onVerify);
   const verifyGenRef = useRef(0);
@@ -34,23 +32,29 @@ export function CaptchaInput({ onVerify, disabled }: CaptchaInputProps) {
     setLoading(true);
     setErr("");
     setVerified(false);
-    setPicking(null);
+    setCode("");
     setBusy(false);
     onVerifyRef.current("");
     try {
       const res = await fetch("/api/captcha");
       const json = (await res.json()) as CaptchaData & { error?: string };
-      if (!res.ok || !json.prompt || !Array.isArray(json.icons) || typeof json.id !== "string") {
+      if (
+        !res.ok ||
+        typeof json.svg !== "string" ||
+        !json.svg.trim() ||
+        typeof json.id !== "string" ||
+        typeof json.length !== "number"
+      ) {
         setErr(json.error || "Không tải được mã bảo vệ");
         setData(null);
         return;
       }
-      if (json.icons.length < 2) {
-        setErr("Dữ liệu captcha không hợp lệ");
-        setData(null);
-        return;
-      }
-      setData({ id: json.id, prompt: json.prompt, icons: json.icons });
+      setData({
+        id: json.id,
+        svg: json.svg,
+        length: json.length,
+        prompt: json.prompt || `Nhập ${json.length} chữ số`,
+      });
     } catch {
       setErr("Không tải được mã bảo vệ");
       setData(null);
@@ -63,54 +67,55 @@ export function CaptchaInput({ onVerify, disabled }: CaptchaInputProps) {
     void load();
   }, [load]);
 
-  const submitPick = useCallback(
-    async (key: string) => {
-      if (verified || disabled || !data || verifyingRef.current) return;
-      verifyingRef.current = true;
-      setBusy(true);
-      verifyGenRef.current += 1;
-      const gen = verifyGenRef.current;
-      setPicking(key);
-      setErr("");
-      try {
-        const res = await fetch("/api/captcha", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id: data.id, answer: key }),
-        });
-        const json = (await res.json()) as { ok: boolean; reason?: string; consumeToken?: string };
-        if (gen !== verifyGenRef.current) return;
-        if (json.ok && json.consumeToken) {
-          setVerified(true);
-          onVerifyRef.current(json.consumeToken);
-          setErr("");
-        } else {
-          setErr(json.reason || "Chưa đúng biểu tượng");
-          setVerified(false);
-          onVerifyRef.current("");
-          void load();
-        }
-      } catch {
-        if (gen !== verifyGenRef.current) return;
-        setErr("Lỗi xác minh. Thử lại.");
+  const submitCode = useCallback(async () => {
+    if (verified || disabled || !data || verifyingRef.current) return;
+    const trimmed = code.replace(/\s+/g, "");
+    if (trimmed.length !== data.length) {
+      setErr(`Nhập đủ ${data.length} chữ số`);
+      return;
+    }
+    verifyingRef.current = true;
+    setBusy(true);
+    verifyGenRef.current += 1;
+    const gen = verifyGenRef.current;
+    setErr("");
+    try {
+      const res = await fetch("/api/captcha", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: data.id, answer: trimmed }),
+      });
+      const json = (await res.json()) as { ok: boolean; reason?: string; consumeToken?: string };
+      if (gen !== verifyGenRef.current) return;
+      if (json.ok && json.consumeToken) {
+        setVerified(true);
+        onVerifyRef.current(json.consumeToken);
+        setErr("");
+      } else {
+        setErr(json.reason || "Sai mã số");
         setVerified(false);
         onVerifyRef.current("");
+        setCode("");
         void load();
-      } finally {
-        verifyingRef.current = false;
-        setBusy(false);
-        setPicking(null);
       }
-    },
-    [verified, disabled, data, load],
-  );
+    } catch {
+      if (gen !== verifyGenRef.current) return;
+      setErr("Lỗi xác minh. Thử lại.");
+      setVerified(false);
+      onVerifyRef.current("");
+      void load();
+    } finally {
+      verifyingRef.current = false;
+      setBusy(false);
+    }
+  }, [verified, disabled, data, code, load]);
 
   const isVerified = verified && Boolean(data && !err);
 
   return (
-    <div className="captcha-svg-root" style={{ width: "100%", maxWidth: "420px", margin: "0 auto" }}>
+    <div className="captcha-code-root" style={{ width: "100%", maxWidth: "420px", margin: "0 auto" }}>
       <div
-        className={`captcha-svg-card ${err ? "captcha-svg-card--err" : ""} ${isVerified ? "captcha-svg-card--ok" : ""}`}
+        className={`captcha-code-card ${err ? "captcha-code-card--err" : ""} ${isVerified ? "captcha-code-card--ok" : ""}`}
         style={{
           width: "100%",
           padding: "var(--space-3, 0.75rem)",
@@ -143,7 +148,6 @@ export function CaptchaInput({ onVerify, disabled }: CaptchaInputProps) {
             type="button"
             onClick={() => void load()}
             disabled={loading || disabled}
-            className="captcha-svg-refresh"
             style={{
               background: "none",
               border: "none",
@@ -155,17 +159,17 @@ export function CaptchaInput({ onVerify, disabled }: CaptchaInputProps) {
               padding: "2px 6px",
               borderRadius: "6px",
             }}
-            title="Làm mới"
+            title="Làm mới mã"
           >
-            {loading ? "Đang tải…" : "Đổi bài"}
+            {loading ? "Đang tải…" : "Đổi mã"}
           </button>
         </div>
 
         {data ? (
           <p
             style={{
-              margin: "0 0 0.75rem",
-              fontSize: "0.9375rem",
+              margin: "0 0 0.5rem",
+              fontSize: "0.875rem",
               fontWeight: 600,
               color: "var(--text-primary)",
               fontFamily: "var(--font-ui)",
@@ -177,60 +181,66 @@ export function CaptchaInput({ onVerify, disabled }: CaptchaInputProps) {
         ) : null}
 
         <div
-          className="captcha-svg-grid"
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-            gap: "0.65rem",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "4.5rem",
+            marginBottom: "0.75rem",
+            borderRadius: "var(--radius-lg)",
+            border: "1px solid var(--border-default, #e2e8f0)",
+            background: "#fff",
+            padding: "0.5rem",
           }}
         >
           {loading && !data ? (
-            <span style={{ gridColumn: "1 / -1", textAlign: "center", color: "var(--text-muted)", fontSize: "0.875rem" }}>
-              Đang tải…
-            </span>
+            <span style={{ color: "var(--text-muted)", fontSize: "0.875rem" }}>Đang tải…</span>
+          ) : data ? (
+            <span
+              style={{ lineHeight: 0, maxWidth: "100%" }}
+              dangerouslySetInnerHTML={{ __html: data.svg }}
+            />
           ) : null}
-          {data?.icons.map((icon, i) => (
-            <button
-              key={`${data.id}-${icon.key}-${i}`}
-              type="button"
-              disabled={disabled || loading || verified || busy}
-              aria-label={`Lựa chọn ${i + 1}`}
-              onClick={() => void submitPick(icon.key)}
-              className="captcha-svg-tile"
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                minHeight: "4.5rem",
-                padding: "0.5rem",
-                borderRadius: "var(--radius-lg, 0.5rem)",
-                border: "2px solid hsl(160, 35%, 78%)",
-                background: "#fff",
-                cursor: disabled || loading || verified || busy ? "not-allowed" : "pointer",
-                opacity: disabled || loading || verified || busy ? 0.65 : 1,
-                transition: "border-color 0.15s, box-shadow 0.15s, transform 0.1s",
-              }}
-              onMouseDown={(e) => {
-                if (!disabled && !loading && !verified && !busy) (e.currentTarget as HTMLButtonElement).style.transform = "scale(0.98)";
-              }}
-              onMouseUp={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.transform = "";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.transform = "";
-              }}
-            >
-              {picking === icon.key ? (
-                <span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>…</span>
-              ) : (
-                <span
-                  className="captcha-svg-tile-inner"
-                  style={{ lineHeight: 0 }}
-                  dangerouslySetInnerHTML={{ __html: icon.svg }}
-                />
-              )}
-            </button>
-          ))}
+        </div>
+
+        <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", alignItems: "center" }}>
+          <input
+            type="text"
+            inputMode="numeric"
+            autoComplete="off"
+            autoCorrect="off"
+            spellCheck={false}
+            maxLength={data?.length ?? 6}
+            placeholder={data ? `${data.length} chữ số` : "…"}
+            value={code}
+            disabled={disabled || loading || verified || !data}
+            onChange={(e) => {
+              const v = e.target.value.replace(/\D/g, "");
+              setCode(v.slice(0, data?.length ?? 6));
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                void submitCode();
+              }
+            }}
+            className={inputClassName}
+            style={{ flex: "1 1 140px", minWidth: "8rem", fontVariantNumeric: "tabular-nums" }}
+            aria-label="Nhập mã số xác minh"
+          />
+          <button
+            type="button"
+            onClick={() => void submitCode()}
+            disabled={disabled || loading || verified || !data || busy || code.replace(/\s+/g, "").length !== (data?.length ?? 0)}
+            className="pill-btn-primary"
+            style={{
+              padding: "0.5rem 1rem",
+              fontSize: "0.875rem",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {busy ? "Đang kiểm tra…" : "Xác minh"}
+          </button>
         </div>
       </div>
 
@@ -239,12 +249,20 @@ export function CaptchaInput({ onVerify, disabled }: CaptchaInputProps) {
           {err}
         </p>
       ) : isVerified ? (
-        <p style={{ margin: "0.35rem 0 0", fontSize: "0.75rem", color: "var(--success-text, #22c55e)", fontWeight: 600, textAlign: "center" }}>
+        <p
+          style={{
+            margin: "0.35rem 0 0",
+            fontSize: "0.75rem",
+            color: "var(--success-text, #22c55e)",
+            fontWeight: 600,
+            textAlign: "center",
+          }}
+        >
           Đã xác minh
         </p>
       ) : (
         <p style={{ margin: "0.35rem 0 0", fontSize: "0.75rem", color: "var(--text-secondary)", textAlign: "center" }}>
-          Chạm vào đúng biểu tượng theo gợi ý phía trên (SVG).
+          Gõ đúng các chữ số trong khung, rồi bấm Xác minh.
         </p>
       )}
     </div>

@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { otpCodes } from "@/lib/db/schema";
 import { eq, and, gt } from "drizzle-orm";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const getResend = () => new Resend(process.env.RESEND_API_KEY!);
 
 function generateOTP(): string {
   return Math.floor(100000 + Math.random() * 900000).toString(); // 6 digits
@@ -54,7 +54,7 @@ export async function POST(req: Request) {
       change_email: "Đổi email",
     };
 
-    const { error } = await resend.emails.send({
+    const { error } = await getResend().emails.send({
       from: "KHOMANGUON <noreply@khomanguon.io.vn>",
       to: email,
       subject: `Mã xác minh ${purposeLabels[purpose] || purpose} - KHOMANGUON`,

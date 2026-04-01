@@ -1,0 +1,87 @@
+{
+  "common": {
+    "home": "Home",
+    "products": "Products",
+    "news": "News",
+    "about": "About",
+    "contact": "Contact",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "search": "Search...",
+    "cart": "Cart",
+    "dashboard": "Dashboard",
+    "settings": "Settings",
+    "orders": "Orders",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "add": "Add",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "success": "Success",
+    "error": "Error",
+    "warning": "Warning",
+    "info": "Info"
+  },
+  "home": {
+    "featuredProducts": "Featured Products",
+    "hotDeals": "Hot Deals",
+    "newArrivals": "New Arrivals",
+    "viewAll": "View All",
+    "categories": "Categories",
+    "allCategories": "All Categories"
+  },
+  "product": {
+    "addToCart": "Add to Cart",
+    "outOfStock": "Out of Stock",
+    "inStock": "In Stock",
+    "sold": "sold",
+    "reviews": "reviews",
+    "description": "Description",
+    "relatedProducts": "Related Products",
+    "seller": "Seller",
+    "verified": "Verified"
+  },
+  "cart": {
+    "empty": "Your cart is empty",
+    "total": "Total",
+    "checkout": "Checkout",
+    "remove": "Remove from cart"
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "forgotPassword": "Forgot password?",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "registerNow": "Register now",
+    "loginNow": "Login now",
+    "enterOtp": "Enter OTP Code",
+    "otpSent": "OTP code has been sent to your email",
+    "resendOtp": "Resend OTP code"
+  },
+  "category": {
+    "sourceCodes": "Source Codes",
+    "aiAccounts": "AI Accounts",
+    "emails": "Emails",
+    "mmoServices": "MMO Services",
+    "socialMedia": "Social Media Accounts",
+    "priceRange": "Price Range",
+    "filter": "Filter",
+    "sortBy": "Sort by",
+    "quickFilters": "Quick Filters"
+  },
+  "footer": {
+    "allRights": "All rights reserved",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service"
+  }
+}

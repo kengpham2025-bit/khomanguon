@@ -1,0 +1,87 @@
+{
+  "common": {
+    "home": "Trang chủ",
+    "products": "Sản phẩm",
+    "news": "Tin tức",
+    "about": "Giới thiệu",
+    "contact": "Liên hệ",
+    "login": "Đăng nhập",
+    "register": "Đăng ký",
+    "logout": "Đăng xuất",
+    "search": "Tìm kiếm...",
+    "cart": "Giỏ hàng",
+    "dashboard": "Tài khoản",
+    "settings": "Cài đặt",
+    "orders": "Đơn hàng",
+    "loading": "Đang tải...",
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "confirm": "Xác nhận",
+    "delete": "Xóa",
+    "edit": "Sửa",
+    "view": "Xem",
+    "add": "Thêm",
+    "back": "Quay lại",
+    "next": "Tiếp theo",
+    "previous": "Trước",
+    "submit": "Gửi",
+    "success": "Thành công",
+    "error": "Lỗi",
+    "warning": "Cảnh báo",
+    "info": "Thông tin"
+  },
+  "home": {
+    "featuredProducts": "Sản phẩm nổi bật",
+    "hotDeals": "Ưu đãi hot",
+    "newArrivals": "Sản phẩm mới",
+    "viewAll": "Xem tất cả",
+    "categories": "Danh mục",
+    "allCategories": "Tất cả danh mục"
+  },
+  "product": {
+    "addToCart": "Thêm vào giỏ",
+    "outOfStock": "Hết hàng",
+    "inStock": "Còn hàng",
+    "sold": "đã bán",
+    "reviews": "đánh giá",
+    "description": "Mô tả",
+    "relatedProducts": "Sản phẩm liên quan",
+    "seller": "Người bán",
+    "verified": "Tích xanh"
+  },
+  "cart": {
+    "empty": "Giỏ hàng trống",
+    "total": "Tổng cộng",
+    "checkout": "Thanh toán",
+    "remove": "Xóa khỏi giỏ"
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Mật khẩu",
+    "confirmPassword": "Xác nhận mật khẩu",
+    "forgotPassword": "Quên mật khẩu?",
+    "noAccount": "Chưa có tài khoản?",
+    "hasAccount": "Đã có tài khoản?",
+    "registerNow": "Đăng ký ngay",
+    "loginNow": "Đăng nhập ngay",
+    "enterOtp": "Nhập mã OTP",
+    "otpSent": "Mã OTP đã được gửi đến email của bạn",
+    "resendOtp": "Gửi lại mã OTP"
+  },
+  "category": {
+    "sourceCodes": "Mã nguồn",
+    "aiAccounts": "Tài khoản AI",
+    "emails": "Email",
+    "mmoServices": "Dịch vụ MMO",
+    "socialMedia": "Tài khoản MXH",
+    "priceRange": "Khoảng giá",
+    "filter": "Bộ lọc",
+    "sortBy": "Sắp xếp theo",
+    "quickFilters": "Bộ lọc nhanh"
+  },
+  "footer": {
+    "allRights": "Mọi quyền được bảo lưu",
+    "privacyPolicy": "Chính sách bảo mật",
+    "termsOfService": "Điều khoản sử dụng"
+  }
+}

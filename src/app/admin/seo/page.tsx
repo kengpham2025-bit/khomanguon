@@ -1,6 +1,8 @@
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import { SeoSettings } from "@/components/admin/SeoSettings";
 
+export const dynamic = "force-dynamic";
+
 export default function AdminSeoPage() {
   return (
     <div className="min-h-screen bg-slate-50">

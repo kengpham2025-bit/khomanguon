@@ -1,5 +1,7 @@
 import { AiNewsBloggerClient } from "@/components/admin/AiNewsBloggerClient";
 
+export const dynamic = "force-dynamic";
+
 interface AdminNewsPageProps {
   searchParams: { locale?: string };
 }

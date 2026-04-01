@@ -1,5 +1,7 @@
 import { KycClient } from "@/components/KycClient";
 
+export const dynamic = "force-dynamic";
+
 interface KycPageProps {
   searchParams: { locale?: string };
 }

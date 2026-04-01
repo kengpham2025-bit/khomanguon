@@ -1,10 +1,19 @@
 "use client";
 
-import { ClerkProvider } from "@clerk/nextjs";
+import React, { lazy, Suspense } from "react";
 import { NotificationProvider } from "@/components/NotificationProvider";
 import { ConfirmDialogWrapper } from "@/components/ConfirmDialogWrapper";
 
 const clerkKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+
+// Only import ClerkProvider when the key exists (avoids module-level throw during build)
+const ClerkProviderLazy = clerkKey
+  ? lazy(() =>
+      import("@clerk/nextjs").then((mod) => ({
+        default: mod.ClerkProvider,
+      }))
+    )
+  : null;
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const inner = (
@@ -14,14 +23,15 @@ export function Providers({ children }: { children: React.ReactNode }) {
     </NotificationProvider>
   );
 
-  // Skip ClerkProvider when key is missing (e.g. during Netlify static build)
-  if (!clerkKey) {
+  if (!ClerkProviderLazy) {
     return inner;
   }
 
   return (
-    <ClerkProvider publishableKey={clerkKey}>
-      {inner}
-    </ClerkProvider>
+    <Suspense fallback={inner}>
+      <ClerkProviderLazy publishableKey={clerkKey!}>
+        {inner}
+      </ClerkProviderLazy>
+    </Suspense>
   );
 }

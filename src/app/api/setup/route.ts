@@ -3,10 +3,12 @@ import { createClient } from "@libsql/client";
 
 export const dynamic = "force-dynamic";
 
-const client = createClient({
-  url: process.env.TURSO_DATABASE_URL!,
-  authToken: process.env.TURSO_AUTH_TOKEN!,
-});
+function getClient() {
+  return createClient({
+    url: process.env.TURSO_DATABASE_URL!,
+    authToken: process.env.TURSO_AUTH_TOKEN!,
+  });
+}
 
 const CREATE_TABLES_SQL = [
   `CREATE TABLE IF NOT EXISTS users (
@@ -294,6 +296,7 @@ const SEED_SQL = [
 
 export async function GET() {
   const results: string[] = [];
+  const client = getClient();
 
   try {
     // Create tables

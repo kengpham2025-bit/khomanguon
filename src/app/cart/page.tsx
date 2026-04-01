@@ -1,5 +1,7 @@
 import { CartPageClient } from "@/components/CartPageClient";
 
+export const dynamic = "force-dynamic";
+
 interface CartPageProps {
   searchParams: { locale?: string };
 }

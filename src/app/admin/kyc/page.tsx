@@ -1,5 +1,7 @@
 import { KycApprovalClient } from "@/components/admin/KycApprovalClient";
 
+export const dynamic = "force-dynamic";
+
 interface AdminKycPageProps {
   searchParams: { locale?: string };
 }

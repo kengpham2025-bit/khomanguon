@@ -1,5 +1,7 @@
 import { ChatPageClient } from "@/components/ChatPageClient";
 
+export const dynamic = "force-dynamic";
+
 interface ChatPageProps {
   searchParams: { locale?: string };
 }

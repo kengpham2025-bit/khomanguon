@@ -3,7 +3,7 @@ import { db } from "./db";
 import { otpCodes } from "./db/schema";
 import { eq, and } from "drizzle-orm";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const getResend = () => new Resend(process.env.RESEND_API_KEY!);
 
 export function generateOTP(): string {
   return Math.floor(100000 + Math.random() * 900000).toString();
@@ -53,7 +53,7 @@ export async function sendOtpEmail(email: string, purpose: OtpPurpose): Promise<
     createdAt: new Date(),
   });
 
-  await resend.emails.send({
+  await getResend().emails.send({
     from: "KHOMANGUON <noreply@khomanguon.io.vn>",
     to: email,
     subject: `Mã xác minh ${PURPOSE_LABELS[purpose]} - KHOMANGUON`,
